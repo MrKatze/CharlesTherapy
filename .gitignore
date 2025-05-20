@@ -1,0 +1,18 @@
+# Node.js
+node_modules/
+dist/
+.env
+
+# Angular
+.angular/
+src/environments/
+
+# Logs y caché
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Editor y sistema
+.idea/
+.vscode/
+.DS_Store
