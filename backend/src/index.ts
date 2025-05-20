@@ -12,7 +12,7 @@ class Server {
     routes(): void { }
     start(): void {
         this.app.listen(this.app.get('port'), () => {
-            console.log('Server on port', this.app.get('port'));
+            console.log('SPerrat', this.app.get('port'));
         });
     }
 }
