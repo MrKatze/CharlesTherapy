@@ -80,101 +80,42 @@
   visibility: visible;
 }
 
-.chat-window {
+.history-window {
   flex-grow: 1;
   display: flex;
   flex-direction: column;
+  background-color: #f9fbfa;
+  align-items: center;
+  justify-content: center;
 }
 
-.chat-header {
+
+    
+.header {
   padding: 12px;
-  border-bottom: 2px solid #b8d8d4;
-  background-color: #cde5e3;
+  background-color:  #f9fbfa;
   font-weight: bold;
   font-size: 20px;
   color: #345c58;
+  margin: 0px 20px;
 }
 
-.messages {
+    
+.date {
+  width: 18cm;
+  height:auto;
+  margin:30px;  
   flex-grow: 1;
-  padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 15px;
   background-color: #f9fbfa;
+  border: 2px solid #5a8f87;
+  border-radius:25px;
 }
 
-.message.bot {
-  align-self: flex-start;
-  background-color: #e1f0ec;
-  border: 1px solid #a7c9c2;
-  border-radius: 12px;
-  padding: 12px;
-  max-width: 60%;
-  color: #2f4f4f;
-  box-shadow: 2px 2px 4px rgba(0,0,0,0.05);
-}
-
-.message.user {
-  display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  align-self: flex-start;
-}
-
-.message.user .avatar {
-  width: 40px;
-  height: 40px;
-  background-color: #d4d4d4;
-  border: 1px solid #888;
-  border-radius: 50%;
-}
-
-.message.user .text {
-  background-color: #ffffff;
-  border: 1px solid #c6dad7;
-  border-radius: 12px;
-  padding: 12px;
-  max-width: 60%;
-  color: #3b3b3b;
-  box-shadow: 2px 2px 4px rgba(0,0,0,0.05);
-}
-
-.chat-input {
-  display: flex;
-  border-top: 2px solid #b8d8d4;
-  padding: 12px;
-  background-color: #eaf4f2;
-}
-
-.chat-input input {
-  flex-grow: 1;
-  padding: 10px;
-  border: 1px solid #a0c3bd;
-  border-radius: 20px;
-  outline: none;
-  background-color: #ffffff;
-  color: #333;
-}
-
-.chat-input button {
-  margin-left: 10px;
-   width: 40px;
-  height: 40px;
-  background-color: #5a8f87;
-  color: white;
-  border: none;
-  border-radius: 50px;
-  padding: 8px 8px;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.chat-input button:hover {
-  background-color: #47746d;
-}
-
-.chat-input i:hover {
-  background-color: #47746d;
+.date-argument{
+    border-bottom: 2px solid #5a8f87;
+    padding: 0px 5px;
+    margin-bottom:0px;  
 }
