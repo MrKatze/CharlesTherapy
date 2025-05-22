@@ -52,6 +52,26 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
   `rol` text NOT NULL,
   PRIMARY KEY (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `citas`
+--
+
+DROP TABLE IF EXISTS `citas`;
+CREATE TABLE IF NOT EXISTS `citas` (
+  `id_cita` int NOT NULL AUTO_INCREMENT,
+  `id_paciente` int NOT NULL,
+  `id_especialista` int NOT NULL, 
+  `fecha` timestamp NOT NULL, 
+  `hora` time NOT NULL,
+  `estado` text NOT NULL,
+  PRIMARY KEY (`id_cita`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
