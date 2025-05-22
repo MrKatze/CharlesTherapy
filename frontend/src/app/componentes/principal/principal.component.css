@@ -5,6 +5,7 @@
   background-color: #f2f7f6;
   border: none;
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+  animation: header-sidebar-rainbow 48s linear infinite;
 }
 
 /* Sidebar expandible */
@@ -19,6 +20,7 @@
   gap: 20px;
   transition: width 0.3s ease;
   overflow: hidden;
+  animation: header-sidebar-rainbow 48s linear infinite;
 }
 
 .sidebar:hover {
@@ -39,9 +41,8 @@
   transition: background-color 0.2s;
   font-size:24px;
   display: flex;
+  animation: header-sidebar-rainbow 48s linear infinite;
 }
-
-
 
 .menu-item:hover {
   background-color: #c1dbd8;
@@ -58,14 +59,13 @@
   border-radius: 50%;
   flex-shrink: 0;
   box-sizing: border-box;
+  animation: header-sidebar-rainbow 48s linear infinite;
 }
 
 .icon i {
   font-size: 18px; 
   color: #345c58;
 }
-
-
 
 /* Ocultar texto hasta que se expanda */
 .label {
@@ -93,6 +93,7 @@
   font-weight: bold;
   font-size: 20px;
   color: #345c58;
+  animation: header-sidebar-rainbow 48s linear infinite;
 }
 
 .messages {
@@ -101,18 +102,27 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  background-color: #f9fbfa;
+  background-color: #fff;
+}
+
+/* Animaciones más lentas (48s) */
+.chat-container,
+.sidebar,
+.menu-item,
+.icon,
+.chat-header {
+  animation-duration: 48s !important;
 }
 
 .message.bot {
   align-self: flex-start;
-  background-color: #e1f0ec;
   border: 1px solid #a7c9c2;
   border-radius: 12px;
   padding: 12px;
   max-width: 60%;
   color: #2f4f4f;
   box-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+  animation: message-rainbow 48s linear infinite;
 }
 
 .message.user {
@@ -131,20 +141,21 @@
 }
 
 .message.user .text {
-  background-color: #ffffff;
   border: 1px solid #c6dad7;
   border-radius: 12px;
   padding: 12px;
   max-width: 60%;
   color: #3b3b3b;
   box-shadow: 2px 2px 4px rgba(0,0,0,0.05);
+  animation: message-user-rainbow 48s linear infinite;
 }
 
 .chat-input {
   display: flex;
-  border-top: 2px solid #b8d8d4;
+  border-top: 2px solid #5a8f87;
   padding: 12px;
   background-color: #eaf4f2;
+  animation: border-rainbow 48s linear infinite;
 }
 
 .chat-input input {
@@ -177,4 +188,22 @@
 
 .chat-input i:hover {
   background-color: #47746d;
+}
+
+@keyframes header-sidebar-rainbow {
+  0% { background-color: #e3f9e5; border-color: #b6d8b9; }
+  20% { background-color: #d0f0ec; border-color: #a3cfc9; }
+  40% { background-color: #d0e6f7; border-color: #a3bcd8; }
+  60% { background-color: #f7e6d0; border-color: #d8c3a3; }
+  80% { background-color: #f7d0d0; border-color: #d8a3a3; }
+  100% { background-color: #e3f9e5; border-color: #b6d8b9; }
+}
+
+@keyframes border-rainbow {
+  0% { border-top: 2px solid #b6d8b9; }
+  20% { border-top: 2px solid #a3cfc9; }
+  40% { border-top: 2px solid #a3bcd8; }
+  60% { border-top: 2px solid #d8c3a3; }
+  80% { border-top: 2px solid #d8a3a3; }
+  100% { border-top: 2px solid #b6d8b9; }
 }
