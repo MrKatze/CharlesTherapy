@@ -67,7 +67,9 @@ CREATE TABLE IF NOT EXISTS `citas` (
   `fecha` timestamp NOT NULL, 
   `hora` time NOT NULL,
   `estado` text NOT NULL,
-  PRIMARY KEY (`id_cita`)
+  PRIMARY KEY (`id_cita`),
+  FOREIGN KEY (`id_paciente`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE,
+  FOREIGN KEY (`id_especialista`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -80,7 +82,8 @@ CREATE TABLE IF NOT EXISTS `observaciones` (
   `id_observacion` int NOT NULL AUTO_INCREMENT,
   `id_cita` int NOT NULL,
   `observacion` text NOT NULL,
-  PRIMARY KEY (`id_observacion`)
+  PRIMARY KEY (`id_observacion`),
+  FOREIGN KEY (`id_cita`) REFERENCES `citas` (`id_cita`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 COMMIT;

@@ -2,7 +2,7 @@
 node_modules/
 dist/
 .env
-
+backend/src/build/
 # Angular
 .angular/
 src/environments/
@@ -17,3 +17,6 @@ package-lock.json
 .idea/
 .vscode/
 .DS_Store
+backend/pnpm-lock.yaml
+
+mysql/
