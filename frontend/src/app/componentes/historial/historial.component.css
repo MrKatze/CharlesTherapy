@@ -5,6 +5,7 @@
   background-color: #f2f7f6;
   border: none;
   box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+  animation: rainbow-bg 20s linear infinite;
 }
 
 /* Sidebar expandible */
@@ -118,4 +119,16 @@
     border-bottom: 2px solid #5a8f87;
     padding: 0px 5px;
     margin-bottom:0px;  
+}
+
+/* Animación de fondo multicolor */
+@keyframes rainbow-bg {
+  0% { background-color: #7fffd4; }      /* verde aqua */
+  16% { background-color: #00ffff; }    /* aqua */
+  32% { background-color: #3498db; }    /* azul */
+  48% { background-color: #8e44ad; }    /* morado */
+  64% { background-color: #e74c3c; }    /* rojo */
+  80% { background-color: #ffa500; }    /* naranja */
+  96% { background-color: #ffff00; }    /* amarillo */
+  100% { background-color: #7fffd4; }   /* verde aqua (loop) */
 }

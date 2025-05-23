@@ -20,25 +20,29 @@
     </a>
   </aside>
 
-
-    
   <main class="chat-window">
     <header class="chat-header">
-      THERAPIST CHATBOT ..
+      THERAPIST CHATBOT
     </header>
 
     <section class="messages">
-      <div class="message bot">Hello, how can I help you?</div>
-      <div class="message user">
-        <div class="avatar"></div>
-        <div class="text">Hello, I'm feeling anxious...</div>
+      <div *ngFor="let msg of messages" 
+           [class.bot]="msg.role === 'assistant'"
+           [class.user]="msg.role === 'user'"
+           class="message">
+        <div *ngIf="msg.role === 'user'" class="avatar"></div>
+        <div class="text">{{msg.content}}</div>
       </div>
+      <div *ngIf="loading" class="message bot">Thinking...</div>
     </section>
 
     <footer class="chat-input">
-      <input type="text" placeholder="Type a message..." />
-      <button>
-      <span class="send"><i class="fa-solid fa-paper-plane"></i></span>
+      <input [(ngModel)]="userInput" 
+             (keyup.enter)="sendMessage()"
+             type="text" 
+             placeholder="Type a message..." />
+      <button (click)="sendMessage()">
+        <span class="send"><i class="fa-solid fa-paper-plane"></i></span>
       </button>
     </footer>
   </main>
