@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { citaController } from "../controller/citaController";
+import { citaController } from "../controllers/citaController";
 
 class CitaRoutes{
     public router: Router = Router();
