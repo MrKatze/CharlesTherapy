@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import pool from "../database";
+import pool from "../dataBase";
 
 class CitaController{
     public async list(req: Request, res:Response):Promise<void>{
