@@ -70,7 +70,18 @@ CREATE TABLE IF NOT EXISTS `citas` (
   PRIMARY KEY (`id_cita`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+-- --------------------------------------------------------
 
+--
+-- Estructura de tabla para la tabla `observaciones`
+--
+DROP TABLE IF EXISTS `observaciones`;
+CREATE TABLE IF NOT EXISTS `observaciones` (
+  `id_observacion` int NOT NULL AUTO_INCREMENT,
+  `id_cita` int NOT NULL,
+  `observacion` text NOT NULL,
+  PRIMARY KEY (`id_observacion`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 COMMIT;
 
