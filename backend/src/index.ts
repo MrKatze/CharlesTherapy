@@ -2,6 +2,8 @@ import express, { Application } from 'express';
 import morgan from 'morgan';
 import cors from 'cors';
 
+import usuariosRoutes from './routes/usuariosRoutes'
+
 class Server {
     public app: Application;
     constructor() {
@@ -18,6 +20,7 @@ class Server {
     }
 
     routes(): void {
+        this.app.use('api/usuarios',usuariosRoutes);
     }
     
     start(): void {

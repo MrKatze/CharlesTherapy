@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { UsuariosService } from '../../../services/usuarios.service'; // Importar el servicio
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,7 @@ export class LoginComponent {
   loading = false;
   errorMessage = '';
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private usuariosService: UsuariosService) {} // Inyectar el servicio
 
   onSubmit() {
     if (!this.email.trim() || !this.password.trim()) {
@@ -26,16 +27,20 @@ export class LoginComponent {
     this.loading = true;
     this.errorMessage = '';
 
-    // Simulación de autenticación
-    setTimeout(() => {
-      if (this.email === 'admin@example.com' && this.password === 'password') {
+    // Usar el servicio para autenticar
+    this.usuariosService.login(this.email, this.password).subscribe({
+      next: (response) => {
         alert('Inicio de sesión exitoso');
         window.location.href = '/';
-      } else {
+      },
+      error: (error) => {
         this.errorMessage = 'Credenciales inválidas.';
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
       }
-      this.loading = false;
-    }, 1000);
+    });
   }
 
   redirectToRegister() {
