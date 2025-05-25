@@ -1,0 +1,84 @@
+<div class="chat-container">
+    <aside class="sidebar">
+        <a href="" class="menu-item">
+            <span class="icon home"><i class="fa-solid fa-home"></i></span>
+            <span class="label">Inicio</span>
+        </a>
+        <a class="menu-item">
+            <span class="icon profile"><i class="fa-solid fa-user"></i></span>
+            <span class="label">Perfil</span>
+        </a>
+        <a href="/historial" class="menu-item">
+            <span class="icon clock"><i class="fa-solid fa-clock"></i></span>
+            <span class="label">Historial</span>
+        </a>
+        <a class="menu-item">
+            <span class="icon menu"><i class="fa-solid fa-message"></i></span>
+            <span class="label">Chat</span>
+        </a>
+    </aside>
+
+    <main class="chat-window">
+        <header class="chat-header">
+            PERFIL DEL PACIENTE
+        </header>
+
+        <section class="messages perfil-section">
+            <div class="message user perfil-bloque">
+                <h3>Información del Usuario</h3>
+                <div class="text">
+                    <strong>Usuario:</strong> {{ paciente.nombre }}<br>
+                    <strong>Correo:</strong> {{ paciente.email }}
+                </div>
+            </div>
+
+            <div class="message user perfil-bloque">
+                <h3>Gráfico de Estado Emocional</h3>
+                <div class="grafica-estadisticas">
+                    <div class="barra">
+                        <span class="nombre">Depresión</span>
+                        <div class="barra-base">
+                            <div class="barra-relleno" [ngClass]="getColor(paciente.estadisticas.depresion)"
+                                [style.width.%]="getWidth(paciente.estadisticas.depresion)">
+                            </div>
+                        </div>
+                        <span class="valor">{{ paciente.estadisticas.depresion }}%</span>
+                    </div>
+
+                    <div class="barra">
+                        <span class="nombre">Estrés</span>
+                        <div class="barra-base">
+                            <div class="barra-relleno" [ngClass]="getColor(paciente.estadisticas.estres)"
+                                [style.width.%]="getWidth(paciente.estadisticas.estres)">
+                            </div>
+                        </div>
+                        <span class="valor">{{ paciente.estadisticas.estres }}%</span>
+                    </div>
+
+                    <div class="barra">
+                        <span class="nombre">Ansiedad</span>
+                        <div class="barra-base">
+                            <div class="barra-relleno" [ngClass]="getColor(paciente.estadisticas.ansiedad)"
+                                [style.width.%]="getWidth(paciente.estadisticas.ansiedad)">
+                            </div>
+                        </div>
+                        <span class="valor">{{ paciente.estadisticas.ansiedad }}%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botón de recomendación -->
+            <div class="message user perfil-bloque">
+                <button (click)="obtenerRecomendacion()" class="btn-recomendacion" [disabled]="loading">
+                    {{ loading ? 'Cargando...' : 'Recomendación de especialistas' }}
+                </button>
+
+                <div *ngIf="recomendacion" class="recomendacion-ia">
+                    <h4>Recomendación de la IA:</h4>
+                    <p>{{ recomendacion }}</p>
+                </div>
+            </div>
+
+        </section>
+    </main>
+</div>
