@@ -18,7 +18,9 @@
     "express": "^5.1.0",
     "morgan": "^1.10.0",
     "mysql2": "^3.14.1",
-    "promise-mysql": "^5.2.0"
+    "nodemon": "^3.1.10",
+    "promise-mysql": "^5.2.0",
+    "typescript": "^5.8.3"
   },
   "devDependencies": {
     "@types/cors": "^2.8.18",

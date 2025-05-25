@@ -1,7 +1,7 @@
 import express, { Application } from 'express';
-import morgan from 'morgan';
 import cors from 'cors';
-
+import morgan from 'morgan';
+import citasRoutes from './routes/citasRoutes';
 import usuariosRoutes from './routes/usuariosRoutes'
 
 class Server {
@@ -12,14 +12,17 @@ class Server {
         this.routes();
     }
     config(): void {
+        this.app.use(express.json());
+        this.app.use(cors());
+
         this.app.set('port', process.env.PORT || 3000);
         this.app.use(morgan('dev'));
         this.app.use(cors());
         this.app.use(express.json());
         this.app.use(express.urlencoded({ extended: false }));
     }
-
-    routes(): void {
+    routes(): void { 
+        this.app.use('/api/citas', citasRoutes);
         this.app.use('api/usuarios',usuariosRoutes);
     }
     
