@@ -11,7 +11,7 @@ import OpenAI from 'openai';
 })
 export class PrincipalComponent {
   messages: {role: string, content: string}[] = [
-    {role: 'assistant', content: 'Hola, como puedo ayudarte?'}
+    {role: 'assistant', content: 'Hola, como puedo ayudarte (?)'}
   ];
   userInput = '';
   loading = false;
