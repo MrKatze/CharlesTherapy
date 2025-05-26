@@ -11,6 +11,12 @@ class CitaRoutes{
             res.send('Citas API');
         });
         this.router.get('/list', citaController.list);
+        this.router.get('/list/:id', citaController.listOne);
+        this.router.post('/create', citaController.create);
+        this.router.put('/update/:id', citaController.update);
+        this.router.delete('/delete/:id', citaController.delete);
+        this.router.get('/paciente/:paciente_id', citaController.getCitasByPaciente);
+        this.router.get('/especialista/:especialista_id', citaController.getCitasByEspecialista);
     }
 
 }

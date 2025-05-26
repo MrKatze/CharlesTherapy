@@ -4,6 +4,7 @@ import { HistorialComponent } from './componentes/historial/historial.component'
 import { LoginComponent } from './componentes/login/login.component';
 import { RegistroComponent } from './componentes/registro/registro.component';
 import { PerfilPsicometricoComponent } from './componentes/perfil-psicometrico/perfil-psicometrico.component';
+import { CitasComponent } from './componentes/citas/citas.component';
 
 export const routes: Routes = [
   { path: '', component: PrincipalComponent },
@@ -12,4 +13,6 @@ export const routes: Routes = [
   { path: 'registro', component: RegistroComponent},
   { path: 'perfilPsicometrico', component: PerfilPsicometricoComponent},
  
+  { path: 'citas', component: CitasComponent},
+
 ];

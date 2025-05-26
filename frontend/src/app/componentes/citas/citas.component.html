@@ -1,0 +1,26 @@
+{{fecha | date: 'dd/MM/yyyy'}}
+<div class="citas-container">
+    <h2>Agendación de Citas</h2>
+    
+    <div class="calendar-container">
+      <full-calendar [options]="calendarOptions"></full-calendar>
+    </div>
+    
+    <form (ngSubmit)="agendarCita()" class="cita-form">
+      <div class="form-group">
+        <label for="fecha">Fecha:</label>
+        <input type="date" id="fecha" [(ngModel)]="cita.fecha" name="fecha" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="hora">Hora:</label>
+        <select id="hora" [(ngModel)]="cita.hora" name="hora" required>
+          <option value="">Seleccione una hora</option>
+          <option *ngFor="let hora of horasDisponibles" [value]="hora">{{hora}}</option>
+        </select>
+      </div>
+      
+      
+      <button type="submit" class="btn-agendar">Agendar Cita</button>
+    </form>
+  </div>

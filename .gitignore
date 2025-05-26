@@ -20,3 +20,4 @@ package-lock.json
 backend/pnpm-lock.yaml
 
 mysql/
+frontend/pnpm-lock.yaml
