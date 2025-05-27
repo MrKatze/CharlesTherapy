@@ -1,0 +1,70 @@
+/* Copiado de principal.component.css solo la parte de la sidebar y relacionados */
+.sidebar {
+  width: 60px;
+  background-color: #d2e4e2;
+  border-right: 2px solid #b2cfc9;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-top: 10px;
+  gap: 20px;
+  transition: width 0.3s ease;
+  overflow: hidden;
+  animation: header-sidebar-rainbow 48s linear infinite;
+}
+
+.sidebar:hover {
+  width: 180px;
+}
+
+.sidebar a{
+    text-decoration: none;
+    color: black;
+}
+
+.menu-item {
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size:24px;
+  display: flex;
+  animation: header-sidebar-rainbow 48s linear infinite;
+}
+
+.menu-item:hover {
+  background-color: #c1dbd8;
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e6f2f1;
+  border: 2px solid #5a8f87;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  animation: header-sidebar-rainbow 48s linear infinite;
+}
+
+.icon i {
+  font-size: 18px; 
+  color: #345c58;
+}
+
+.label {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s, opacity 0.3s ease;
+  font-size:20px;
+}
+
+.sidebar:hover .label {
+  opacity: 1;
+  visibility: visible;
+}
