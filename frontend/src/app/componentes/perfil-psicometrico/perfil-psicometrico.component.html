@@ -1,22 +1,5 @@
 <div class="chat-container">
-    <aside class="sidebar">
-        <a href="" class="menu-item">
-            <span class="icon home"><i class="fa-solid fa-home"></i></span>
-            <span class="label">Inicio</span>
-        </a>
-        <a class="menu-item">
-            <span class="icon profile"><i class="fa-solid fa-user"></i></span>
-            <span class="label">Perfil</span>
-        </a>
-        <a href="/historial" class="menu-item">
-            <span class="icon clock"><i class="fa-solid fa-clock"></i></span>
-            <span class="label">Historial</span>
-        </a>
-        <a class="menu-item">
-            <span class="icon menu"><i class="fa-solid fa-message"></i></span>
-            <span class="label">Chat</span>
-        </a>
-    </aside>
+    <app-sidebar></app-sidebar>
 
     <main class="chat-window">
         <header class="chat-header">
@@ -81,4 +64,19 @@
 
         </section>
     </main>
+
+    <!-- Botón flotante para abrir el chat -->
+    <div class="chat-fab" (click)="openChat()">
+      <i class="fa-solid fa-robot"></i>
+    </div>
+
+    <!-- Modal general del chatbot -->
+    <app-chatbot-modal
+      [show]="showChatModal"
+      [messages]="messages"
+      [userInput]="userInput"
+      [loading]="loadingChat"
+      [sendMessage]="sendMessage.bind(this)"
+      [closeChat]="closeChat.bind(this)">
+    </app-chatbot-modal>
 </div>

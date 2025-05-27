@@ -2,30 +2,64 @@
 
 <div class="chat-container">
   <app-sidebar></app-sidebar>
-  <main class="chat-window">
-    <header class="chat-header">
-      THERAPIST CHATBOT
-    </header>
+  <main class="main-center-content">
+    <div class="centered-content">
+      <!-- 1. Mini Perfil -->
+      <section class="mini-perfil card">
+        <div class="avatar-container">
+          <img class="avatar-img" src="assets/avatar-default.png" alt="Avatar" />
+        </div>
+        <div class="perfil-info">
+          <h2>Mi Perfil</h2>
+          <div class="perfil-datos">
+            <div><strong>Nombre:</strong> {{ usuario.nombre || 'Nombre Usuario' }}</div>
+            <div><strong>Edad:</strong> {{ usuario.edad || '--' }}</div>
+            <div><strong>Objetivo en turno:</strong> {{ usuario.objetivo || 'Sin objetivo asignado' }}</div>
+          </div>
+        </div>
+      </section>
 
-    <section class="messages">
-      <div *ngFor="let msg of messages" 
-           [class.bot]="msg.role === 'assistant'"
-           [class.user]="msg.role === 'user'"
-           class="message">
-        <div *ngIf="msg.role === 'user'" class="avatar"></div>
-        <div class="text">{{msg.content}}</div>
-      </div>
-      <div *ngIf="loading" class="message bot">Thinking...</div>
-    </section>
+      <!-- 2. Resumen Semanal -->
+      <section class="resumen-semanal card">
+        <h2>Resumen Semanal</h2>
+        <button [disabled]="!tieneResumenSemanal" class="btn-resumen">
+          Ver Resumen Semanal
+        </button>
+        <button *ngIf="!tieneResumenSemanal" class="btn-generar">
+          Generar Resumen
+        </button>
+        <!-- Aquí irá la funcionalidad de resumen semanal -->
+      </section>
 
-    <footer class="chat-input">
-      <input [(ngModel)]="userInput" 
-             (keyup.enter)="sendMessage()"
-             type="text" 
-             placeholder="Type a message..." />
-      <button (click)="sendMessage()">
-        <span class="send"><i class="fa-solid fa-paper-plane"></i></span>
-      </button>
-    </footer>
+      <!-- 3. Citas -->
+      <section class="citas card">
+        <h2>Citas</h2>
+        <ng-container *ngIf="citaEnTurno; else sinCita">
+          <div class="cita-info">
+            <div><strong>Fecha:</strong> {{ citaEnTurno.fecha }}</div>
+            <div><strong>Hora:</strong> {{ citaEnTurno.hora }}</div>
+            <div><strong>Motivo:</strong> {{ citaEnTurno.motivo }}</div>
+            <!-- Agrega más campos según sea necesario -->
+          </div>
+        </ng-container>
+        <ng-template #sinCita>
+          <button class="btn-agendar" (click)="abrirModalCita()">Agendar Cita</button>
+        </ng-template>
+        <!-- Aquí irá el modal de agendar cita -->
+      </section>
+    </div>
   </main>
 </div>
+
+<!-- Botón flotante para abrir el chat -->
+<div class="chat-fab" (click)="openChat()">
+  <i class="fa-solid fa-robot"></i>
+</div>
+
+<!-- Modal general del chatbot -->
+<app-chatbot-modal
+  [show]="showChatModal"
+  [messages]="messages"
+  [userInput]="userInput"
+  [loading]="loading">
+</app-chatbot-modal>
