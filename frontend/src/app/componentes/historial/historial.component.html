@@ -1,36 +1,45 @@
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
 <div class="chat-container">
-  <app-sidebar></app-sidebar>
-  <div class="sidebar-contacts">
-    <div class="contact" *ngFor="let contacto of contactos">
-      <div class="avatar-circle">
-        <img *ngIf="contacto.foto" [src]="contacto.foto" alt="avatar" />
-        <span *ngIf="!contacto.foto">{{ contacto.inicial }}</span>
-      </div>
-      <div class="contact-name">{{ contacto.nombre }}</div>
-    </div>
-  </div>
-  <div class="history-window">
-    <div class="header">Historial de Sesiones</div>
-    <div class="date">
-      <div *ngFor="let sesion of sesiones" class="date-argument">
-        Sesión: {{ sesion.fecha }} - "{{ sesion.descripcion }}"
-      </div>
-      <div *ngIf="!sesiones.length" class="date-argument" style="color:#888;">No hay sesiones registradas.</div>
-    </div>
-  </div>
+  <aside class="sidebar">
+    <a href=" " class="menu-item">
+      <span class="icon home"><i class="fa-solid fa-home"></i></span>
+      <span class="label">Inicio</span>
+    </a>
+    <a href="perfilPsicometrico" class="menu-item">
+      <span class="icon profile"><i class="fa-solid fa-user"></i></span>
+      <span class="label">Perfil</span>
+    </a>
+    <a href="/historial" class="menu-item">
+      <span class="icon clock"><i class="fa-solid fa-clock"></i></span>
+      <span class="label">Historial</span>
+    </a>
+    <a class="menu-item">
+      <span class="icon menu"><i class="fa-solid fa-message"></i></span>
+      <span class="label">Chat</span>
+    </a>
+  </aside>
 
-  <!-- Botón flotante para abrir el chat -->
-  <div class="chat-fab" (click)="openChat()">
-    <i class="fa-solid fa-robot"></i>
-  </div>
 
-  <!-- Modal general del chatbot -->
-  <app-chatbot-modal
-    [show]="showChatModal"
-    [messages]="messages"
-    [userInput]="userInput"
-    [loading]="loading">
-  </app-chatbot-modal>
+    
+  <main class="history-window">
+    <header class="header">
+      <h1>History</h1>
+    </header>
+    <section class="date">
+        <div class="date-argument">
+            <p>Psicologia</p>
+        </div>
+        <div class="date-argument">
+            <p>5 de mayo de 2025 <br> 14:00 Estrategias para manejar la ansiedad</p>
+        </div>
+        <div class="date-argument">
+            <p>18 de abril de 2025 <br> 11:30 Tecnicas de relajacion</p>
+        </div>
+        <div class="date-argument">
+            <p>23 de abril de 2025 <br> 11:30 Superar la proscatinacion</p>
+        </div>
+    </section>
+  </main>
 </div>

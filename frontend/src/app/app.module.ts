@@ -8,17 +8,18 @@ import { PerfilPsicometricoComponent } from './componentes/perfil-psicometrico/p
 // ...otros imports...
 
 @NgModule({
-declarations: [
-  // otros componentes declarados aquí si es necesario
-],
+  declarations: [
+    AppComponent,
+    PerfilPsicometricoComponent
+  ],
 
-imports: [
+  imports: [
   BrowserModule,
   CommonModule,  // ← ESTE es el que habilita *ngIf y *ngFor
-  PerfilPsicometricoComponent,
   // otros módulos
 ],
 
-  providers: []
+  providers: [],
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

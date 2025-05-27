@@ -1,16 +1,12 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ChatbotModalComponent } from '../chatbot-modal/chatbot-modal.component';
 import OpenAI from 'openai';
-import { SidebarComponent } from "../sidebar/sidebar.component";
 
 @Component({
   selector: 'app-perfil-psicometrico',
-  standalone: true,
-  imports: [CommonModule, ChatbotModalComponent, SidebarComponent],
+  imports: [CommonModule],
   templateUrl: './perfil-psicometrico.component.html',
-  styleUrls: ['./perfil-psicometrico.component.css'],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
+  styleUrls: ['./perfil-psicometrico.component.css']
 })
 export class PerfilPsicometricoComponent {
   paciente = {
@@ -75,46 +71,6 @@ Depresión: ${depresion}.
       console.error(error);
     } finally {
       this.loading = false;
-    }
-  }
-
-  // --- Chatbot modal ---
-  showChatModal = false;
-  messages: {role: string, content: string, animatedContent?: string}[] = [
-    {role: 'assistant', content: 'Hola, ¿en qué puedo ayudarte con tu perfil psicométrico?'}
-  ];
-  userInput = '';
-  loadingChat = false;
-
-  openChat() {
-    this.showChatModal = true;
-  }
-
-  closeChat() {
-    this.showChatModal = false;
-  }
-
-  async sendMessage() {
-    if (!this.userInput.trim()) return;
-    this.loadingChat = true;
-    const userMessage = this.userInput;
-    this.messages.push({role: 'user', content: userMessage});
-    this.userInput = '';
-    setTimeout(() => {
-      const botResponse = 'Esta es una respuesta simulada para el perfil psicométrico.';
-      const animatedMsg = {role: 'assistant', content: botResponse, animatedContent: ''};
-      this.messages.push(animatedMsg);
-      this.animateBotMessage(animatedMsg, botResponse);
-      this.loadingChat = false;
-    }, 1000);
-  }
-
-  async animateBotMessage(msg: any, fullText: string) {
-    const words = fullText.split(' ');
-    msg.animatedContent = '';
-    for (let i = 0; i < words.length; i++) {
-      msg.animatedContent += (i > 0 ? ' ' : '') + words[i];
-      await new Promise(res => setTimeout(res, 400));
     }
   }
 }
