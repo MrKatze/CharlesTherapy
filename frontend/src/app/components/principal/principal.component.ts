@@ -4,12 +4,12 @@ import { FormsModule } from '@angular/forms';
 import OpenAI from 'openai';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ChatbotModalComponent } from '../chatbot-modal/chatbot-modal.component';
-import { BigfiveTestComponent } from '../bigfive-test/bigfive-test.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-principal',
   standalone: true,
-  imports: [CommonModule, FormsModule, SidebarComponent, ChatbotModalComponent, BigfiveTestComponent],
+  imports: [CommonModule, FormsModule, SidebarComponent, ChatbotModalComponent],
   templateUrl: './principal.component.html',
   styleUrls: ['./principal.component.css']
 })
@@ -37,6 +37,8 @@ export class PrincipalComponent implements OnInit {
   });
 
   showBigFiveModal = false;
+
+  constructor(private router: Router) {}
 
   ngOnInit() {
     // Solo acceder a localStorage si está en el navegador
@@ -102,11 +104,23 @@ export class PrincipalComponent implements OnInit {
     alert('Abrir modal para agendar cita (por implementar)');
   }
 
+  abrirBigFiveModal() {
+    this.showBigFiveModal = true;
+  }
+
   onBigFiveCompleted() {
     // Actualizar el usuario y ocultar el modal
     this.usuario.bigFive = true;
     localStorage.setItem('usuario', JSON.stringify(this.usuario));
     this.showBigFiveModal = false;
     // (Opcional) Aquí podrías llamar a un servicio para actualizar el usuario en backend si lo deseas
+  }
+
+  irAPerfilPsicometrico() {
+    this.router.navigate(['/perfilPsicometrico']); // Corrige la ruta a la que navega el botón
+  }
+
+  irABigFiveTest() {
+    this.router.navigate(['/bigfive']); // Corrige la ruta a la que navega el botón
   }
 }

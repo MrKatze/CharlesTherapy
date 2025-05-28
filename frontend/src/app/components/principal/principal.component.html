@@ -47,6 +47,13 @@
         </ng-template>
         <!-- Aquí irá el modal de agendar cita -->
       </section>
+
+      <!-- Apartado para el test Big Five -->
+      <section class="bigfive-manual card">
+        <h2>Test de Personalidad Big Five</h2>
+        <button class="btn-bigfive" (click)="irAPerfilPsicometrico()">Ver mi resultado Big Five</button>
+        <button class="btn-bigfive" (click)="irABigFiveTest()">Realizar el test Big Five</button>
+      </section>
     </div>
   </main>
 </div>
@@ -63,5 +70,3 @@
   [userInput]="userInput"
   [loading]="loading">
 </app-chatbot-modal>
-
-<app-bigfive-test *ngIf="showBigFiveModal" (completed)="onBigFiveCompleted()"></app-bigfive-test>
