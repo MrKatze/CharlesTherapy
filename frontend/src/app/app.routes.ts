@@ -1,18 +1,17 @@
 import { Routes } from '@angular/router';
-import { PrincipalComponent } from './componentes/principal/principal.component';
-import { HistorialComponent } from './componentes/historial/historial.component';
-import { LoginComponent } from './componentes/login/login.component';
-import { RegistroComponent } from './componentes/registro/registro.component';
-import { PerfilPsicometricoComponent } from './componentes/perfil-psicometrico/perfil-psicometrico.component';
-import { CitasComponent } from './componentes/citas/citas.component';
+import { PrincipalComponent } from './components/principal/principal.component';
+import { HistorialComponent } from './components/historial/historial.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegistroComponent } from './components/registro/registro.component';
+import { PerfilPsicometricoComponent } from './components/perfil-psicometrico/perfil-psicometrico.component';
+import { CitasComponent } from './components/citas/citas.component';
 
 export const routes: Routes = [
-  { path: '', component: PrincipalComponent },
-  { path: 'historial', component: HistorialComponent },
   { path: 'login', component: LoginComponent},
   { path: 'registro', component: RegistroComponent},
+  { path: 'home', component: PrincipalComponent },
   { path: 'perfilPsicometrico', component: PerfilPsicometricoComponent},
- 
+  { path: 'historial', component: HistorialComponent },
   { path: 'citas', component: CitasComponent},
 
 ];

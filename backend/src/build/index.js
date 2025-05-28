@@ -26,8 +26,8 @@ class Server {
     }
     routes() {
         this.app.use('/api/citas', citasRoutes_1.default);
-        this.app.use('api/usuarios', usuariosRoutes_1.default);
-        this.app.use('api/observaciones', observacionRoutes_1.default);
+        this.app.use('/api/usuarios', usuariosRoutes_1.default);
+        this.app.use('/api/observaciones', observacionRoutes_1.default);
     }
     start() {
         this.app.listen(this.app.get('port'), () => {

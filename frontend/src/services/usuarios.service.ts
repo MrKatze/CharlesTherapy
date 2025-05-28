@@ -36,9 +36,8 @@ export class UsuariosService {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
-  // Método para autenticar un usuario
+  // Servicio de login
   login(email: string, password: string): Observable<any> {
-    const loginData = { email, password };
-    return this.http.post(`${this.apiUrl}/login`, loginData);
+    return this.http.post(`${this.apiUrl}/login`, { correo: email, password });
   }
 }

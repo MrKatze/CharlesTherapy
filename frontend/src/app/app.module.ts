@@ -1,25 +1,27 @@
 import { NgModule } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 import { BrowserModule } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
-
-
+import { routes } from './app.routes';
 import { AppComponent } from './app.component';
-import { PerfilPsicometricoComponent } from './componentes/perfil-psicometrico/perfil-psicometrico.component';
-// ...otros imports...
+import { PerfilPsicometricoComponent } from './components/perfil-psicometrico/perfil-psicometrico.component';
+import { LoginComponent } from './components/login/login.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
+    LoginComponent,
     PerfilPsicometricoComponent
   ],
 
   imports: [
-  BrowserModule,
-  CommonModule,  // ← ESTE es el que habilita *ngIf y *ngFor
-  // otros módulos
-],
+    BrowserModule,
+    CommonModule,  
+    HttpClientModule, 
+  ],
 
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [LoginComponent]
 })
 export class AppModule { }

@@ -95,5 +95,24 @@ class UsuariosController {
             }
         });
     }
+    // Login de usuario
+    login(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { correo, password } = req.body;
+                const [rows] = yield dataBase_1.default.query('SELECT * FROM usuarios WHERE correo = ? AND password = ?', [correo, password]);
+                if (rows.length === 0) {
+                    res.status(401).json({ message: 'Correo o contraseña incorrectos' });
+                }
+                else {
+                    // Puedes retornar solo los datos necesarios, no toda la fila
+                    res.json({ message: 'Login exitoso', usuario: rows[0] });
+                }
+            }
+            catch (error) {
+                res.status(500).json({ message: 'Error al iniciar sesión', error });
+            }
+        });
+    }
 }
 exports.usuariosController = new UsuariosController();

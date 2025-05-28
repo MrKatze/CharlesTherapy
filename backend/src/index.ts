@@ -24,8 +24,8 @@ class Server {
     }
     routes(): void { 
         this.app.use('/api/citas', citasRoutes);
-        this.app.use('api/usuarios',usuariosRoutes);
-        this.app.use('api/observaciones', observacionRoutes);
+        this.app.use('/api/usuarios',usuariosRoutes);
+        this.app.use('/api/observaciones', observacionRoutes);
     }
     
     start(): void {
