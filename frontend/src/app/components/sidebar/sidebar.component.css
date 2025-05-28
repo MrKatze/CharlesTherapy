@@ -1,16 +1,42 @@
 /* Copiado de principal.component.css solo la parte de la sidebar y relacionados */
 .sidebar {
   width: 60px;
-  background-color: #d2e4e2;
+  min-height: 100vh;
+  height: 100vh;
+  max-height: 100vh;
+  box-sizing: border-box;
+  /* El color de fondo será sobrescrito por la clase de estado de ánimo */
   border-right: 2px solid #b2cfc9;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   padding-top: 10px;
   gap: 20px;
-  transition: width 0.3s ease;
+  transition: width 0.3s ease, background 0.5s;
   overflow: hidden;
   animation: header-sidebar-rainbow 48s linear infinite;
+}
+
+/* Clases de color según estado de ánimo */
+.sidebar-feliz {
+  background: linear-gradient(180deg, #ffe066 0%, #fff6b3 100%);
+  border-right: 2px solid #ffd700;
+}
+.sidebar-triste {
+  background: linear-gradient(180deg, #a3c9f7 0%, #e3f0fc 100%);
+  border-right: 2px solid #6fa3ef;
+}
+.sidebar-ansioso {
+  background: linear-gradient(180deg, #f7cac9 0%, #fbeee6 100%);
+  border-right: 2px solid #f5a9a7;
+}
+.sidebar-enojado {
+  background: linear-gradient(180deg, #ffb3b3 0%, #ffe0e0 100%);
+  border-right: 2px solid #ff6666;
+}
+.sidebar-neutral {
+  background: linear-gradient(180deg, #d2e4e2 0%, #b2cfc9 100%);
+  border-right: 2px solid #b2cfc9;
 }
 
 .sidebar:hover {
@@ -22,6 +48,7 @@
     color: black;
 }
 
+/* Subtonos para iconos y hover */
 .menu-item {
   align-items: center;
   gap: 10px;
@@ -35,7 +62,7 @@
 }
 
 .menu-item:hover {
-  background-color: #c1dbd8;
+  background-color: rgba(255,255,255,0.25);
 }
 
 .icon {
@@ -67,4 +94,30 @@
 .sidebar:hover .label {
   opacity: 1;
   visibility: visible;
+}
+
+/* Responsive: sidebar se mantiene sticky y ocupa todo el alto */
+@media (max-width: 900px) {
+  .sidebar {
+    min-height: 100vh;
+    height: 100vh;
+    width: 50px;
+  }
+}
+@media (max-width: 600px) {
+  .sidebar {
+    min-height: 100vh;
+    height: 100vh;
+    width: 40px;
+    padding-top: 4px;
+    gap: 10px;
+  }
+  .menu-item {
+    font-size: 18px;
+    padding: 6px;
+  }
+  .icon {
+    width: 28px;
+    height: 28px;
+  }
 }

@@ -20,7 +20,7 @@ class UsuariosController {
       if ((rows as any[]).length === 0) {
         res.status(404).json({ message: 'Usuario no encontrado' });
       } else {
-        res.json(rows);
+        res.json((rows as any[])[0]);
       }
     } catch (error) {
       res.status(500).json({ message: 'Error al obtener el usuario', error });
@@ -30,8 +30,8 @@ class UsuariosController {
   // Crear un nuevo usuario
   async createUsuario(req: Request, res: Response): Promise<void> {
     try {
-      const { usuario, correo, password, rol } = req.body;
-      const result = await pool.query('INSERT INTO usuarios (usuario, correo, password, rol) VALUES (?, ?, ?, ?)', [usuario, correo, password, rol]);
+      const { usuario, correo, password, rol, bigFive } = req.body;
+      const result = await pool.query('INSERT INTO usuarios (usuario, correo, password, rol, bigFive) VALUES (?, ?, ?, ?, ?)', [usuario, correo, password, rol, bigFive ?? false]);
       res.status(201).json({ message: 'Usuario creado', id: (result[0] as any).insertId });
     } catch (error) {
       res.status(500).json({ message: 'Error al crear el usuario', error });
@@ -42,8 +42,8 @@ class UsuariosController {
   async updateUsuario(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const { usuario, correo, password, rol } = req.body;
-      const result = await pool.query('UPDATE usuarios SET usuario = ?, correo = ?, password = ?, rol = ? WHERE id_usuario = ?', [usuario, correo, password, rol, id]);
+      const { usuario, correo, password, rol, bigFive } = req.body;
+      const result = await pool.query('UPDATE usuarios SET usuario = ?, correo = ?, password = ?, rol = ?, bigFive = ? WHERE id_usuario = ?', [usuario, correo, password, rol, bigFive, id]);
       if ((result[0] as any).affectedRows === 0) {
         res.status(404).json({ message: 'Usuario no encontrado' });
       } else {

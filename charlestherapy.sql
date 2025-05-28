@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Servidor: 127.0.0.1:3306
--- Tiempo de generación: 20-05-2025 a las 18:48:38
--- Versión del servidor: 8.3.0
--- Versión de PHP: 8.2.18
+-- Servidor: localhost
+-- Tiempo de generación: 28-05-2025 a las 23:41:03
+-- Versión del servidor: 10.4.32-MariaDB
+-- Versión de PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,34 +24,19 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `mensajes`
+-- Estructura de tabla para la tabla `bigfive`
 --
 
-DROP TABLE IF EXISTS `mensajes`;
-CREATE TABLE IF NOT EXISTS `mensajes` (
-  `id_mensaje` int NOT NULL AUTO_INCREMENT,
-  `id_paciente` int NOT NULL,
-  `id_especialista` int NOT NULL,
-  `mensaje` text NOT NULL,
-  `fecha` timestamp NOT NULL,
-  PRIMARY KEY (`id_mensaje`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `usuarios`
---
-
-DROP TABLE IF EXISTS `usuarios`;
-CREATE TABLE IF NOT EXISTS `usuarios` (
-  `id_usuario` int NOT NULL AUTO_INCREMENT,
-  `usuario` text NOT NULL,
-  `correo` text NOT NULL,
-  `password` text NOT NULL,
-  `rol` text NOT NULL,
-  PRIMARY KEY (`id_usuario`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+CREATE TABLE `bigfive` (
+  `id` int(11) NOT NULL,
+  `id_usuario` int(11) NOT NULL,
+  `neuroticismo` decimal(4,2) NOT NULL,
+  `extraversion` decimal(4,2) NOT NULL,
+  `apertura` decimal(4,2) NOT NULL,
+  `amabilidad` decimal(4,2) NOT NULL,
+  `responsabilidad` decimal(4,2) NOT NULL,
+  `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -59,34 +44,157 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 -- Estructura de tabla para la tabla `citas`
 --
 
-DROP TABLE IF EXISTS `citas`;
-CREATE TABLE IF NOT EXISTS `citas` (
-  `id_cita` int NOT NULL AUTO_INCREMENT,
-  `id_paciente` int NOT NULL,
-  `id_especialista` int NOT NULL, 
-  `fecha` timestamp NOT NULL, 
+CREATE TABLE `citas` (
+  `id_cita` int(11) NOT NULL,
+  `id_paciente` int(11) NOT NULL,
+  `id_especialista` int(11) NOT NULL,
+  `fecha` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `hora` time NOT NULL,
-  `estado` text NOT NULL,
-  PRIMARY KEY (`id_cita`),
-  FOREIGN KEY (`id_paciente`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (`id_especialista`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `estado` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `mensajes`
+--
+
+CREATE TABLE `mensajes` (
+  `id_mensaje` int(11) NOT NULL,
+  `id_paciente` int(11) NOT NULL,
+  `id_especialista` int(11) NOT NULL,
+  `mensaje` text NOT NULL,
+  `fecha` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
 --
 -- Estructura de tabla para la tabla `observaciones`
 --
-DROP TABLE IF EXISTS `observaciones`;
-CREATE TABLE IF NOT EXISTS `observaciones` (
-  `id_observacion` int NOT NULL AUTO_INCREMENT,
-  `id_cita` int NOT NULL,
-  `observacion` text NOT NULL,
-  `fecha` timestamp NOT NULL,
-  PRIMARY KEY (`id_observacion`),
-  FOREIGN KEY (`id_cita`) REFERENCES `citas` (`id_cita`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE `observaciones` (
+  `id_observacion` int(11) NOT NULL,
+  `id_cita` int(11) NOT NULL,
+  `observacion` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `usuarios`
+--
+
+CREATE TABLE `usuarios` (
+  `id_usuario` int(11) NOT NULL,
+  `usuario` text NOT NULL,
+  `correo` text NOT NULL,
+  `password` text NOT NULL,
+  `rol` text NOT NULL,
+  `bigFive` tinyint(1) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `usuarios`
+--
+
+INSERT INTO `usuarios` (`id_usuario`, `usuario`, `correo`, `password`, `rol`, `bigFive`) VALUES
+(1, 'jose ramon', 'x@mail.com', 'x', 'paciente', 0);
+
+--
+-- Índices para tablas volcadas
+--
+
+--
+-- Indices de la tabla `bigfive`
+--
+ALTER TABLE `bigfive`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_usuario` (`id_usuario`);
+
+--
+-- Indices de la tabla `citas`
+--
+ALTER TABLE `citas`
+  ADD PRIMARY KEY (`id_cita`),
+  ADD KEY `id_paciente` (`id_paciente`),
+  ADD KEY `id_especialista` (`id_especialista`);
+
+--
+-- Indices de la tabla `mensajes`
+--
+ALTER TABLE `mensajes`
+  ADD PRIMARY KEY (`id_mensaje`);
+
+--
+-- Indices de la tabla `observaciones`
+--
+ALTER TABLE `observaciones`
+  ADD PRIMARY KEY (`id_observacion`),
+  ADD KEY `id_cita` (`id_cita`);
+
+--
+-- Indices de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`id_usuario`);
+
+--
+-- AUTO_INCREMENT de las tablas volcadas
+--
+
+--
+-- AUTO_INCREMENT de la tabla `bigfive`
+--
+ALTER TABLE `bigfive`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `citas`
+--
+ALTER TABLE `citas`
+  MODIFY `id_cita` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `mensajes`
+--
+ALTER TABLE `mensajes`
+  MODIFY `id_mensaje` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `observaciones`
+--
+ALTER TABLE `observaciones`
+  MODIFY `id_observacion` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT de la tabla `usuarios`
+--
+ALTER TABLE `usuarios`
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `bigfive`
+--
+ALTER TABLE `bigfive`
+  ADD CONSTRAINT `bigfive_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `citas`
+--
+ALTER TABLE `citas`
+  ADD CONSTRAINT `citas_ibfk_1` FOREIGN KEY (`id_paciente`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `citas_ibfk_2` FOREIGN KEY (`id_especialista`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--
+-- Filtros para la tabla `observaciones`
+--
+ALTER TABLE `observaciones`
+  ADD CONSTRAINT `observaciones_ibfk_1` FOREIGN KEY (`id_cita`) REFERENCES `citas` (`id_cita`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

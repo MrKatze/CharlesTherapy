@@ -6,13 +6,16 @@ import { RegistroComponent } from './components/registro/registro.component';
 import { PerfilPsicometricoComponent } from './components/perfil-psicometrico/perfil-psicometrico.component';
 import { CitasComponent } from './components/citas/citas.component';
 import { BigfiveTestComponent } from './components/bigfive-test/bigfive-test.component';
+import { ChatbotComponent } from './components/chatbot/chatbot.component';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginComponent},
-  { path: 'registro', component: RegistroComponent},
+  { path: '', component: PrincipalComponent, pathMatch: 'full' },
   { path: 'home', component: PrincipalComponent },
-  { path: 'perfilPsicometrico', component: PerfilPsicometricoComponent},
+  { path: 'login', component: LoginComponent },
+  { path: 'registro', component: RegistroComponent },
+  { path: 'perfilPsicometrico', component: PerfilPsicometricoComponent },
   { path: 'historial', component: HistorialComponent },
-  { path: 'citas', component: CitasComponent},
-  { path: 'bigfive', component: BigfiveTestComponent},
+  { path: 'citas', component: CitasComponent },
+  { path: 'bigfive', component: BigfiveTestComponent },
+  { path: 'chatbot', component: ChatbotComponent },
 ];

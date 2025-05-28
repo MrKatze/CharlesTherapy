@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { BigFiveQuestion, BigFiveResult } from '../../models/bigfive.model';
@@ -74,6 +74,8 @@ export class BigfiveTestComponent {
   result: BigFiveResult | null = null;
   userId: number = 1; // Reemplaza por el id real del usuario autenticado
 
+  @Output() completed = new EventEmitter<void>();
+
   constructor(
     private fb: FormBuilder,
     private bigFiveService: BigFiveService
@@ -144,6 +146,7 @@ export class BigfiveTestComponent {
       next: () => {
         this.result = result;
         alert('Resultados guardados correctamente.');
+        this.completed.emit();
       },
       error: () => {
         alert('Error al guardar resultados.');

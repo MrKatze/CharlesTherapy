@@ -28,8 +28,10 @@ export class LoginComponent {
     this.loading = true;
     this.usuariosService.login(this.email, this.password).subscribe({
       next: (response) => {
-        // Aquí puedes guardar el token o id de usuario si tu backend lo retorna
-        // localStorage.setItem('token', response.token);
+        // Guardar usuario en localStorage para control de flujo Big Five
+        if (response && response.usuario) {
+          localStorage.setItem('usuario', JSON.stringify(response.usuario));
+        }
         this.router.navigate(['/home']);
       },
       error: (error) => {
