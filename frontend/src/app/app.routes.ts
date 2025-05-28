@@ -5,6 +5,7 @@ import { LoginComponent } from './components/login/login.component';
 import { RegistroComponent } from './components/registro/registro.component';
 import { PerfilPsicometricoComponent } from './components/perfil-psicometrico/perfil-psicometrico.component';
 import { CitasComponent } from './components/citas/citas.component';
+import { BigfiveTestComponent } from './components/bigfive-test/bigfive-test.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent},
@@ -13,5 +14,5 @@ export const routes: Routes = [
   { path: 'perfilPsicometrico', component: PerfilPsicometricoComponent},
   { path: 'historial', component: HistorialComponent },
   { path: 'citas', component: CitasComponent},
-
+  { path: 'bigfive', component: BigfiveTestComponent},
 ];

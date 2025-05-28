@@ -13,7 +13,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 @Component({
   selector: 'app-citas',
   standalone: true,
-  imports: [FormsModule, CommonModule, FullCalendarModule],
+  imports: [FormsModule, CommonModule,  FullCalendarModule],
   templateUrl: './citas.component.html',
   styleUrls: ['./citas.component.css']
 })
