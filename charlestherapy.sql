@@ -56,21 +56,28 @@ CREATE TABLE IF NOT EXISTS `usuarios` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `citas`
+-- Estructura de tabla para la tabla `cita`
 --
 
-DROP TABLE IF EXISTS `citas`;
-CREATE TABLE IF NOT EXISTS `citas` (
-  `id_cita` int NOT NULL AUTO_INCREMENT,
-  `id_paciente` int NOT NULL,
-  `id_especialista` int NOT NULL, 
-  `fecha` timestamp NOT NULL, 
-  `hora` time NOT NULL,
+CREATE TABLE `cita` (
+  `id_cita` int NOT NULL,
+  `paciente_id` int NOT NULL,
+  `especialista_id` int NOT NULL,
+  `fecha` timestamp NOT NULL,
   `estado` text NOT NULL,
-  PRIMARY KEY (`id_cita`),
-  FOREIGN KEY (`id_paciente`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE,
-  FOREIGN KEY (`id_especialista`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE
+  `descripcion` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Volcado de datos para la tabla `cita`
+--
+
+INSERT INTO `cita` (`id_cita`, `paciente_id`, `especialista_id`, `fecha`, `estado`, `descripcion`) VALUES
+(2, 5, 4, '2025-05-30 10:00:00', 'proxima', 'Paciente Loquito'),
+(3, 1, 4, '2025-05-30 09:00:00', 'cancelada', 'Juan\r\n'),
+(4, 3, 4, '2025-05-28 11:00:00', 'terminada', 'a\r\n'),
+(5, 2, 4, '2025-05-28 12:00:00', 'en confirmacion', 'a\r\n');
+
 
 -- --------------------------------------------------------
 
