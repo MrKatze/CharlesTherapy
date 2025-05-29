@@ -2,16 +2,17 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import OpenAI from 'openai';
+import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
   selector: 'app-principal',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, SidebarComponent],
   templateUrl: './principal.component.html',
   styleUrls: ['./principal.component.css']
 })
 export class PrincipalComponent {
   messages: {role: string, content: string}[] = [
-    {role: 'assistant', content: 'Hola, como puedo ayudarte?'}
+    {role: 'assistant', content: 'Hola, como puedo ayudarte (?)'}
   ];
   userInput = '';
   loading = false;

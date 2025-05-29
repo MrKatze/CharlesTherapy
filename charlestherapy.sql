@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS `observaciones` (
   `id_observacion` int NOT NULL AUTO_INCREMENT,
   `id_cita` int NOT NULL,
   `observacion` text NOT NULL,
+  `fecha` timestamp NOT NULL,
   PRIMARY KEY (`id_observacion`),
   FOREIGN KEY (`id_cita`) REFERENCES `citas` (`id_cita`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
