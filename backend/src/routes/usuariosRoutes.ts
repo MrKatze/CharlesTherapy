@@ -4,6 +4,7 @@ import { usuariosController } from '../controllers/usuariosController';
 const router = Router();
 
 // Rutas para usuarios
+router.post('/login', usuariosController.login);
 router.get('/', usuariosController.getUsuarios);
 router.get('/:id', usuariosController.getUsuarioById);
 router.post('/', usuariosController.createUsuario);

@@ -2,10 +2,11 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { UsuariosService } from '../../../services/usuarios.service'; // Importar el servicio
+import { UsuariosService } from '../../../services/usuarios.service';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [CommonModule, FormsModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
@@ -16,25 +17,23 @@ export class LoginComponent {
   loading = false;
   errorMessage = '';
 
-  constructor(private router: Router, private usuariosService: UsuariosService) {} // Inyectar el servicio
+  constructor(private router: Router, private usuariosService: UsuariosService) {}
 
   onSubmit() {
-    if (!this.email.trim() || !this.password.trim()) {
+    this.errorMessage = '';
+    if (!this.email || !this.password) {
       this.errorMessage = 'Por favor, completa todos los campos.';
       return;
     }
-
     this.loading = true;
-    this.errorMessage = '';
-
-    // Usar el servicio para autenticar
     this.usuariosService.login(this.email, this.password).subscribe({
       next: (response) => {
-        alert('Inicio de sesión exitoso');
-        window.location.href = '/';
+        // Aquí puedes guardar el token o id de usuario si tu backend lo retorna
+        // localStorage.setItem('token', response.token);
+        this.router.navigate(['/home']);
       },
       error: (error) => {
-        this.errorMessage = 'Credenciales inválidas.';
+        this.errorMessage = error.error?.error || 'Credenciales incorrectas o error de servidor.';
         this.loading = false;
       },
       complete: () => {
