@@ -5,6 +5,7 @@ import { BigFiveQuestion, BigFiveResult } from '../../../models/bigfive.model';
 import { BigFiveService } from '../../services/bigfive.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { UsuariosService } from '../../../services/usuarios.service';
 
 @Component({
   selector: 'app-bigfive-test',
@@ -82,7 +83,8 @@ export class BigfiveTestComponent {
 
   constructor(
     private fb: FormBuilder,
-    private bigFiveService: BigFiveService
+    private bigFiveService: BigFiveService,
+    private usuariosService: UsuariosService
   ) {
     this.bigFiveForm = this.fb.group({
       responses: this.fb.array(
@@ -154,24 +156,32 @@ export class BigfiveTestComponent {
     // Calcular promedios
     const traitAverages = {
       neuroticismo: traits.neuroticismo / counts.neuroticismo,
-      extraversión: traits.extraversión / counts.extraversión,
+      extraversion: traits['extraversión'] / counts['extraversión'],
       apertura: traits.apertura / counts.apertura,
       amabilidad: traits.amabilidad / counts.amabilidad,
       responsabilidad: traits.responsabilidad / counts.responsabilidad
     };
-    const result: BigFiveResult = {
+    const result: any = {
       id_usuario: this.userId,
       neuroticismo: traitAverages.neuroticismo,
-      extraversión: traitAverages.extraversión,
+      extraversion: traitAverages.extraversion,
       apertura: traitAverages.apertura,
       amabilidad: traitAverages.amabilidad,
       responsabilidad: traitAverages.responsabilidad
     };
     this.bigFiveService.saveResult(result).subscribe({
       next: () => {
-        this.result = result;
-        alert('Resultados guardados correctamente.');
-        this.completed.emit();
+        // Actualizar el campo bigFive del usuario a 1
+        this.usuariosService.updateUsuario(this.userId, { bigFive: 1 }).subscribe({
+          next: () => {
+            this.result = result;
+            alert('Resultados guardados correctamente.');
+            this.completed.emit();
+          },
+          error: () => {
+            alert('Error al actualizar el estado del usuario.');
+          }
+        });
       },
       error: () => {
         alert('Error al guardar resultados.');
