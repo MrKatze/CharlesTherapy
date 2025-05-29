@@ -81,6 +81,14 @@ export class BigfiveTestComponent {
   currentPage = 0;
   pageSize = 10;
 
+  bigFiveTraits = [
+    { key: 'neuroticismo', label: 'Neuroticismo' },
+    { key: 'extraversion', label: 'Extraversión' },
+    { key: 'apertura', label: 'Apertura' },
+    { key: 'amabilidad', label: 'Amabilidad' },
+    { key: 'responsabilidad', label: 'Responsabilidad' }
+  ];
+
   constructor(
     private fb: FormBuilder,
     private bigFiveService: BigFiveService,
@@ -133,6 +141,28 @@ export class BigfiveTestComponent {
     }
   }
 
+  // Cambia el valor de bigFive a 1 para el usuario actual
+  marcarBigFiveCompletado(): void {
+    this.usuariosService.getUsuarioById(this.userId).subscribe({
+      next: (usuario) => {
+        // Solo actualiza el campo bigFive, deja los demás datos igual
+        const update = { ...usuario, bigFive: 1 };
+        this.usuariosService.updateUsuario(this.userId, update).subscribe({
+          next: () => {
+            // Opcional: feedback visual
+            // alert('Estado Big Five actualizado.');
+          },
+          error: () => {
+            alert('Error al actualizar el estado Big Five del usuario.');
+          }
+        });
+      },
+      error: () => {
+        alert('No se pudo obtener el usuario para actualizar Big Five.');
+      }
+    });
+  }
+
   submit() {
     const values: number[] = (this.bigFiveForm.value.responses as (number | null)[]).map((v: number | null) => +(v ?? 0));
     const traits: any = {
@@ -171,21 +201,24 @@ export class BigfiveTestComponent {
     };
     this.bigFiveService.saveResult(result).subscribe({
       next: () => {
-        // Actualizar el campo bigFive del usuario a 1
-        this.usuariosService.updateUsuario(this.userId, { bigFive: 1 }).subscribe({
-          next: () => {
-            this.result = result;
-            alert('Resultados guardados correctamente.');
-            this.completed.emit();
-          },
-          error: () => {
-            alert('Error al actualizar el estado del usuario.');
-          }
-        });
+        this.marcarBigFiveCompletado();
+        this.result = result;
+        alert('Resultados guardados correctamente.');
+        this.completed.emit();
       },
       error: () => {
         alert('Error al guardar resultados.');
       }
     });
+  }
+
+  getWidth(valor: number, max: number = 5): number {
+    return Math.round((valor / max) * 100);
+  }
+
+  getColor(valor: number): string {
+    if (valor >= 4) return 'alto';
+    if (valor >= 2.5) return 'medio';
+    return 'bajo';
   }
 }

@@ -62,6 +62,20 @@
                 </div>
             </div>
 
+            <div class="message user perfil-bloque">
+                <h3>Resultados Big Five</h3>
+                <div class="grafica-estadisticas">
+                  <div class="barra" *ngFor="let trait of bigFiveTraits">
+                    <span class="nombre">{{ trait.label }}</span>
+                    <div class="barra-base">
+                      <div class="barra-relleno" [ngClass]="getColor(bigFiveResult[trait.key])"
+                           [style.width.%]="getWidth(bigFiveResult[trait.key], 5)"></div>
+                    </div>
+                    <span class="valor">{{ bigFiveResult[trait.key] | number:'1.1-2' }}/5</span>
+                  </div>
+                </div>
+            </div>
+
         </section>
     </main>
 

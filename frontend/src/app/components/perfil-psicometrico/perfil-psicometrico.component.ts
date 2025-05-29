@@ -1,4 +1,4 @@
-import { Component, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatbotModalComponent } from '../chatbot-modal/chatbot-modal.component';
 import OpenAI from 'openai';
@@ -12,7 +12,7 @@ import { SidebarComponent } from "../sidebar/sidebar.component";
   styleUrls: ['./perfil-psicometrico.component.css'],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA]
 })
-export class PerfilPsicometricoComponent {
+export class PerfilPsicometricoComponent implements OnInit {
   paciente = {
     nombre: 'Juan Pérez',
     email: 'juan.perez@example.com',
@@ -30,14 +30,34 @@ export class PerfilPsicometricoComponent {
     { nombre: 'Ansiedad', valor: this.paciente.estadisticas.ansiedad }
   ];
 
+  bigFiveTraits = [
+    { key: 'neuroticismo', label: 'Neuroticismo' },
+    { key: 'extraversion', label: 'Extraversión' },
+    { key: 'apertura', label: 'Apertura' },
+    { key: 'amabilidad', label: 'Amabilidad' },
+    { key: 'responsabilidad', label: 'Responsabilidad' }
+  ];
+
+  bigFiveResult: any = null;
+
+  ngOnInit() {
+    this.bigFiveResult = {
+      neuroticismo: 3.2,
+      extraversion: 4.1,
+      apertura: 2.8,
+      amabilidad: 4.5,
+      responsabilidad: 3.9
+    };
+  }
+
   // Escala fija de 100%
-  getWidth(valor: number): number {
-    return Math.round((valor / 100) * 100);
+  getWidth(valor: number, max: number = 5): number {
+    return Math.round((valor / max) * 100);
   }
 
   getColor(valor: number): string {
-    if (valor >= 70) return 'alto';
-    if (valor >= 40) return 'medio';
+    if (valor >= 4) return 'alto';
+    if (valor >= 2.5) return 'medio';
     return 'bajo';
   }
 
