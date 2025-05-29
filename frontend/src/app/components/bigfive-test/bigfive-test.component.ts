@@ -1,14 +1,15 @@
 import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
-import { BigFiveQuestion, BigFiveResult } from '../../models/bigfive.model';
+import { BigFiveQuestion, BigFiveResult } from '../../../models/bigfive.model';
 import { BigFiveService } from '../../services/bigfive.service';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SidebarComponent } from '../sidebar/sidebar.component';
 
 @Component({
   selector: 'app-bigfive-test',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, SidebarComponent],
   templateUrl: './bigfive-test.component.html',
   styleUrls: ['./bigfive-test.component.css']
 })
@@ -76,6 +77,9 @@ export class BigfiveTestComponent {
 
   @Output() completed = new EventEmitter<void>();
 
+  currentPage = 0;
+  pageSize = 10;
+
   constructor(
     private fb: FormBuilder,
     private bigFiveService: BigFiveService
@@ -87,12 +91,33 @@ export class BigfiveTestComponent {
     });
   }
 
+  get pagedQuestions(): BigFiveQuestion[] {
+    const start = this.currentPage * this.pageSize;
+    return this.questions.slice(start, start + this.pageSize);
+  }
+
+  get totalPages(): number {
+    return Math.ceil(this.questions.length / this.pageSize);
+  }
+
+  nextPage() {
+    if ((this.currentPage + 1) * this.pageSize < this.questions.length) {
+      this.currentPage++;
+    }
+  }
+
+  prevPage() {
+    if (this.currentPage > 0) {
+      this.currentPage--;
+    }
+  }
+
   getQuestionsBySection(section: number) {
     return this.questions.filter(q => q.section === section);
   }
 
-  getFormIndex(q: BigFiveQuestion) {
-    return this.questions.indexOf(q);
+  getFormIndex(q: BigFiveQuestion): string {
+    return this.questions.indexOf(q).toString();
   }
 
   getSectionTitle(section: number): string {

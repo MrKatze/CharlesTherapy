@@ -37,7 +37,7 @@ class UsuariosController {
                     res.status(404).json({ message: 'Usuario no encontrado' });
                 }
                 else {
-                    res.json(rows);
+                    res.json(rows[0]);
                 }
             }
             catch (error) {
@@ -49,8 +49,8 @@ class UsuariosController {
     createUsuario(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { usuario, correo, password, rol } = req.body;
-                const result = yield dataBase_1.default.query('INSERT INTO usuarios (usuario, correo, password, rol) VALUES (?, ?, ?, ?)', [usuario, correo, password, rol]);
+                const { usuario, correo, password, rol, bigFive } = req.body;
+                const result = yield dataBase_1.default.query('INSERT INTO usuarios (usuario, correo, password, rol, bigFive) VALUES (?, ?, ?, ?, ?)', [usuario, correo, password, rol, bigFive !== null && bigFive !== void 0 ? bigFive : false]);
                 res.status(201).json({ message: 'Usuario creado', id: result[0].insertId });
             }
             catch (error) {
@@ -63,8 +63,8 @@ class UsuariosController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id } = req.params;
-                const { usuario, correo, password, rol } = req.body;
-                const result = yield dataBase_1.default.query('UPDATE usuarios SET usuario = ?, correo = ?, password = ?, rol = ? WHERE id_usuario = ?', [usuario, correo, password, rol, id]);
+                const { usuario, correo, password, rol, bigFive } = req.body;
+                const result = yield dataBase_1.default.query('UPDATE usuarios SET usuario = ?, correo = ?, password = ?, rol = ?, bigFive = ? WHERE id_usuario = ?', [usuario, correo, password, rol, bigFive, id]);
                 if (result[0].affectedRows === 0) {
                     res.status(404).json({ message: 'Usuario no encontrado' });
                 }

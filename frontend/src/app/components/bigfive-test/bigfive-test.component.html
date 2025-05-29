@@ -1,24 +1,38 @@
-<form [formGroup]="bigFiveForm" (ngSubmit)="submit()" class="bigfive-form">
-  <div formArrayName="responses">
-    <div *ngFor="let section of [1,2,3,4,5]; let s = index" class="bigfive-section">
-      <h3>Sección {{ s+1 }}: {{ getSectionTitle(s+1) }}</h3>
-      <div *ngFor="let q of getQuestionsBySection(s+1); let i = index" class="bigfive-question">
-        <label>{{ q.text }}</label>
-        <div class="likert-scale">
-          <ng-container *ngIf="bigFiveForm.get('responses') as responses">
-            <select [formControlName]="getFormIndex(q)">
-              <option value="" disabled selected>Selecciona una opción</option>
-              <option *ngFor="let opt of [1,2,3,4,5]" [value]="opt">{{ opt }}</option>
-            </select>
-          </ng-container>
+<div class="chat-container">
+  <app-sidebar></app-sidebar>
+  <main class="bigfive-main-content">
+    <div class="bigfive-content-wrapper">
+      <!-- Formulario del test Big Five -->
+      <form [formGroup]="bigFiveForm" (ngSubmit)="submit()" class="bigfive-form">
+        <div formArrayName="responses">
+          <div *ngFor="let q of pagedQuestions; let idx = index" class="bigfive-question">
+            <label>{{ q.text }}</label>
+            <div class="likert-scale">
+              <ng-container *ngIf="bigFiveForm.get('responses') as responses">
+                <label *ngFor="let opt of [1,2,3,4,5]" class="likert-option">
+                  <input type="radio"
+                    [formControlName]="getFormIndex(q)"
+                    [value]="opt"
+                    [attr.name]="'q' + getFormIndex(q)"
+                  />
+                  <span>{{ opt }}</span>
+                </label>
+              </ng-container>
+            </div>
+          </div>
         </div>
+        <div class="pagination-controls">
+          <button type="button" (click)="prevPage()" [disabled]="currentPage === 0">Anterior</button>
+          <span>Página {{ currentPage + 1 }} de {{ totalPages }}</span>
+          <button type="button" (click)="nextPage()" [disabled]="(currentPage + 1) >= totalPages">Siguiente</button>
+        </div>
+        <button type="submit" [disabled]="bigFiveForm.invalid">Enviar</button>
+      </form>
+
+      <div *ngIf="result" class="bigfive-result">
+        <h4>Resultados del Test Big Five</h4>
+        <pre>{{ result | json }}</pre>
       </div>
     </div>
-  </div>
-  <button type="submit" [disabled]="bigFiveForm.invalid">Enviar</button>
-</form>
-
-<div *ngIf="result" class="bigfive-result">
-  <h4>Resultados del Test Big Five</h4>
-  <pre>{{ result | json }}</pre>
+  </main>
 </div>

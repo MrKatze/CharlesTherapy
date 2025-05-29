@@ -9,7 +9,7 @@ import { BigfiveTestComponent } from './components/bigfive-test/bigfive-test.com
 import { ChatbotComponent } from './components/chatbot/chatbot.component';
 
 export const routes: Routes = [
-  { path: '', component: PrincipalComponent, pathMatch: 'full' },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'home', component: PrincipalComponent },
   { path: 'login', component: LoginComponent },
   { path: 'registro', component: RegistroComponent },

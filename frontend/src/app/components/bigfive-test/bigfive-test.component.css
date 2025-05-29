@@ -31,14 +31,15 @@
   margin-top: 6px;
 }
 
-.likert-scale label {
+.likert-option {
   display: flex;
   flex-direction: column;
   align-items: center;
   font-size: 14px;
+  margin-right: 8px;
 }
 
-.likert-scale input[type="radio"] {
+.likert-option input[type="radio"] {
   margin-bottom: 2px;
 }
 
@@ -70,4 +71,39 @@ button[type="submit"]:disabled {
   color: #345c58;
   font-size: 1.1rem;
   box-shadow: 0 2px 8px rgba(80, 120, 120, 0.08);
+}
+
+.chat-container {
+  display: flex;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f2f7f6;
+}
+
+app-sidebar {
+  flex: 0 0 60px;
+  height: 100vh;
+  z-index: 2;
+  position: sticky;
+  top: 0;
+}
+
+.bigfive-main-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  background: #f2f7f6;
+  padding: 32px 0;
+}
+
+.bigfive-content-wrapper {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
