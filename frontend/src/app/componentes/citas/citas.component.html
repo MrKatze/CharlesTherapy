@@ -1,26 +1,71 @@
-{{fecha | date: 'dd/MM/yyyy'}}
-<div class="citas-container">
-    <h2>Agendación de Citas</h2>
+<div class="layout">
+
+  <app-sidebar></app-sidebar>
+  <!-- {{fecha | date: 'dd/MM/yyyy'}} -->
+  <div class="citas-container">
+    <h2>Vista previa de calendario con Citas</h2>
     
     <div class="calendar-container">
-      <full-calendar [options]="calendarOptions"></full-calendar>
+      <full-calendar #calendar [options]="calendarOptions"></full-calendar>
     </div>
+    <div class="calendar-legend">
+      <h3>Estado de las citas segun su color</h3>
+      <ul class="colors-style" style="list-style: none; padding-left: 0;">
+        <li style="display: flex; align-items: center; margin: 8px;">
+          <span style="display: inline-block; width: 16px; height: 16px; background-color: #dc3545; margin-right: 8px; border: 1px solid #000;"></span>
+          Cancelada
+        </li>
+        <li style="display: flex; align-items: center; margin: 8px;">
+          <span style="display: inline-block; width: 16px; height: 16px; background-color: #007bff; margin-right: 8px; border: 1px solid #000;"></span>
+          Terminada
+        </li>
+        <li style="display: flex; align-items: center; margin: 8px;">
+          <span style="display: inline-block; width: 16px; height: 16px; background-color: #28a745; margin-right: 8px; border: 1px solid #000;"></span>
+          Próxima
+        </li>
+        <li style="display: flex; align-items: center; margin: 8px;">
+          <span style="display: inline-block; width: 16px; height: 16px; background-color: #ffc107; margin-right: 8px; border: 1px solid #000;"></span>
+          En Confirmación
+        </li>
+      </ul>
+    </div>
+     
     
-    <form (ngSubmit)="agendarCita()" class="cita-form">
-      <div class="form-group">
-        <label for="fecha">Fecha:</label>
-        <input type="date" id="fecha" [(ngModel)]="cita.fecha" name="fecha" required>
-      </div>
-      
-      <div class="form-group">
-        <label for="hora">Hora:</label>
-        <select id="hora" [(ngModel)]="cita.hora" name="hora" required>
-          <option value="">Seleccione una hora</option>
-          <option *ngFor="let hora of horasDisponibles" [value]="hora">{{hora}}</option>
-        </select>
-      </div>
-      
-      
-      <button type="submit" class="btn-agendar">Agendar Cita</button>
-    </form>
+
+    <button (click)="mostrarModal = true" class="btn-agendar">Agendar cita</button>
+    
+
   </div>
+</div>
+
+
+<!-- Modal -->
+<div *ngIf="mostrarModal" class="modal-wrapper">
+  <div class="modal-backdrop" (click)="mostrarModal = false"></div>
+  <div class="modal">
+    <div class="citas-container">
+      <h2>Agendación de Citas</h2>
+
+      <div class="calendar-container-modal">
+        <full-calendar [options]="calendarOptions"></full-calendar>
+      </div>
+
+      <form (ngSubmit)="agendarCita()" class="cita-form">
+        <div class="form-group">
+          <label for="fecha">Fecha:</label>
+          <input type="date" id="fecha" [(ngModel)]="cita.fecha" name="fecha" required>
+        </div>
+
+        <div class="form-group">
+          <label for="hora">Hora:</label>
+          <select id="hora" [(ngModel)]="cita" name="hora" required>
+            <option value="">Seleccione una hora</option>
+            <option *ngFor="let hora of horasDisponibles" [value]="hora">{{ hora }}</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn-agendar">Guardar cambios</button>
+      </form>
+    </div>
+  </div>
+</div>

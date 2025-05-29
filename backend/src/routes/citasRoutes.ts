@@ -18,7 +18,6 @@ class CitaRoutes{
         this.router.get('/paciente/:paciente_id', citaController.getCitasByPaciente);
         this.router.get('/especialista/:especialista_id', citaController.getCitasByEspecialista);
     }
-
 }
 
 const citaRoutes = new CitaRoutes();
