@@ -1,11 +1,8 @@
 /* Copiado de principal.component.css solo la parte de la sidebar y relacionados */
 .sidebar {
   width: 60px;
-  min-height: 100vh;
-  height: 100vh;
-  max-height: 100vh;
-  box-sizing: border-box;
-  /* El color de fondo será sobrescrito por la clase de estado de ánimo */
+  height: 100dvh;
+  background-color: #d2e4e2;
   border-right: 2px solid #b2cfc9;
   display: flex;
   flex-direction: column;

@@ -19,12 +19,12 @@ class CitaController{
 
     public async create(req: Request, res: Response): Promise<void> {
         try {
-            const { paciente_id, especialista_id, fecha, hora, estado } = req.body;
+            const { paciente_id, especialista_id, fecha, estado, descripcion} = req.body;
             const query = `
-                INSERT INTO cita (paciente_id, especialista_id, fecha, hora, estado)
+                INSERT INTO cita (paciente_id, especialista_id, fecha, estado, descripcion)
                 VALUES (?, ?, ?, ?, ?)
             `;
-            const [result] = await pool.query(query, [paciente_id, especialista_id, fecha, hora, estado]);
+            const [result] = await pool.query(query, [paciente_id, especialista_id, fecha, estado, descripcion]);
 
             res.status(201).json({ message: 'Cita creada con éxito', insertId: (result as any).insertId });
         } catch (error) {
@@ -35,8 +35,8 @@ class CitaController{
 
     public async update(req: Request, res:Response):Promise<void>{
         const { id } = req.params;
-        const { fecha, hora, paciente_id, especialista_id } = req.body;
-        const [result]:any = await pool.query('UPDATE cita SET fecha = ?, hora = ?, paciente_id = ?, especialista_id = ? WHERE id_cita = ?', [fecha, hora, paciente_id, especialista_id, id]);
+        const { fecha, paciente_id, especialista_id, descripcion} = req.body;
+        const [result]:any = await pool.query('UPDATE cita SET descripcion = ?, fecha = ?, paciente_id = ?, especialista_id = ? WHERE id_cita = ?', [descripcion, fecha,  paciente_id, especialista_id, id]);
         if (result.affectedRows > 0) {
             res.json({ message: 'Cita actualizada' });
         } else {

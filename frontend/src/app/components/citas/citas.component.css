@@ -1,48 +1,26 @@
+.layout {
+  display: flex;
+  height: 100vh; /* O lo que necesites */
+}
+.sidebar {
+  flex-shrink: 0; /* Evita que se encoja */
+}
 .citas-container {
-    max-width: 1200px;
-    margin: 0 auto;
+  flex-grow: 1;
+    max-width: 100dvh;
+    margin: auto;
     padding: 20px;
     font-family: Arial, sans-serif;
+  /* overflow-y: auto; */
   }
   
   .calendar-container {
     margin-bottom: 30px;
-    width: 75dvh;
+    margin: 30 auto;
+    width: 90dvh;
     height: auto;
   }
-  
-  /* Asegúrate de que el calendario tenga un tamaño adecuado */
-  .fc {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  }
-  
-  /* Estilo para los eventos en el calendario */
-  .fc-event {
-    cursor: pointer;
-    font-size: 0.85em;
-    padding: 2px 5px;
-  }
-  
-  .citas-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-  }
-  
-  .cita-form {
-    background: #f5f5f5;
-    padding: 20px;
-    border-radius: 8px;
-    margin-bottom: 30px;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
+    
   label {
     display: block;
     margin-bottom: 5px;
@@ -83,19 +61,101 @@
     margin-bottom: 10px;
     position: relative;
   }
-  
-  .btn-eliminar {
-    background-color: #f44336;
+
+  .btn-agendar {
+    background-color: #1e2a38; /* azul oscuro como los botones del calendario */
     color: white;
-    padding: 5px 10px;
+    padding: 10px 20px;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 500;
     cursor: pointer;
-    position: absolute;
-    top: 15px;
-    right: 15px;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
   }
   
-  .btn-eliminar:hover {
-    background-color: #d32f2f;
+  .btn-agendar:hover {
+    background-color: #32465a; /* un poco más claro al pasar el mouse */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   }
+
+  /* modal */
+  .modal-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999;
+  }
+  
+  .modal-backdrop {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+  
+  .modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 25px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  }
+  .calendar-container-modal {
+    /* margin-bottom: 30px; */
+    margin: auto;
+    width: 100dvh;
+    height: auto;
+  }
+  /* Títulos grandes como "May 2025" */
+.fc-toolbar-title {
+  font-size: 1.2rem; /* Ajusta según necesidad */
+  font-weight: 600;
+}
+
+/* Botones como 'today', 'month', 'week', 'day' */
+.fc-button {
+  font-size: 0.875rem;
+  padding: 0.4em 0.75em;
+}
+
+/* Días de la semana: Sun, Mon, etc. */
+.fc-col-header-cell-cushion {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* Números dentro de cada celda de día */
+.fc-daygrid-day-number {
+  font-size: 0.75rem;
+  padding: 4px;
+}
+
+/* Evento dentro del calendario si usas eventos */
+.fc-event-title {
+  font-size: 0.75rem;
+}
+
+/* Contenedor general (ajustar escalado global) */
+.calendar-container-modal {
+  font-family: "Arial", sans-serif;
+  font-size: 14px;
+  width: 60dvh; /* puedes aumentar un poco esto si se ve muy comprimido */
+  margin: auto;
+}
+
+
+
+.colors-style{
+  display: flex;
+}

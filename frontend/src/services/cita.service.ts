@@ -41,6 +41,6 @@ export interface CitaModel {
     paciente_id: number;
     especialidad_id: number;
     fecha: Date;
-    hora: string;
     estado: string;
+    descripcion: string
 }

@@ -41,31 +41,28 @@ CREATE TABLE `bigfive` (
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `citas`
+-- Estructura de tabla para la tabla `cita`
 --
 
-CREATE TABLE `citas` (
-  `id_cita` int(11) NOT NULL,
-  `id_paciente` int(11) NOT NULL,
-  `id_especialista` int(11) NOT NULL,
-  `fecha` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `hora` time NOT NULL,
-  `estado` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
+CREATE TABLE `cita` (
+  `id_cita` int NOT NULL,
+  `paciente_id` int NOT NULL,
+  `especialista_id` int NOT NULL,
+  `fecha` timestamp NOT NULL,
+  `estado` text NOT NULL,
+  `descripcion` text NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 --
--- Estructura de tabla para la tabla `mensajes`
+-- Volcado de datos para la tabla `cita`
 --
 
-CREATE TABLE `mensajes` (
-  `id_mensaje` int(11) NOT NULL,
-  `id_paciente` int(11) NOT NULL,
-  `id_especialista` int(11) NOT NULL,
-  `mensaje` text NOT NULL,
-  `fecha` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+INSERT INTO `cita` (`id_cita`, `paciente_id`, `especialista_id`, `fecha`, `estado`, `descripcion`) VALUES
+(2, 5, 4, '2025-05-30 10:00:00', 'proxima', 'Paciente Loquito'),
+(3, 1, 4, '2025-05-30 09:00:00', 'cancelada', 'Juan\r\n'),
+(4, 3, 4, '2025-05-28 11:00:00', 'terminada', 'a\r\n'),
+(5, 2, 4, '2025-05-28 12:00:00', 'en confirmacion', 'a\r\n');
+
 
 -- --------------------------------------------------------
 
