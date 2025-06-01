@@ -221,4 +221,10 @@ export class BigfiveTestComponent {
     if (valor >= 2.5) return 'medio';
     return 'bajo';
   }
+
+  // Helper para indexar con string en BigFiveResult
+  getResultValue(result: BigFiveResult, key: string): number {
+    // @ts-ignore
+    return result[key];
+  }
 }

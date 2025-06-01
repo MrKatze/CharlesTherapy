@@ -35,10 +35,10 @@
           <div class="barra" *ngFor="let trait of bigFiveTraits">
             <span class="nombre">{{ trait.label }}</span>
             <div class="barra-base">
-              <div class="barra-relleno" [ngClass]="getColor(result[trait.key])"
-                   [style.width.%]="getWidth(result[trait.key], 5)"></div>
+              <div class="barra-relleno" [ngClass]="getColor(getResultValue(result, trait.key))"
+                   [style.width.%]="getWidth(getResultValue(result, trait.key), 5)"></div>
             </div>
-            <span class="valor">{{ result[trait.key] | number:'1.1-2' }}/5</span>
+            <span class="valor">{{ getResultValue(result, trait.key) | number:'1.1-2' }}/5</span>
           </div>
         </div>
       </div>
