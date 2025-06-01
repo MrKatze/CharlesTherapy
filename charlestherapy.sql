@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost
--- Tiempo de generación: 28-05-2025 a las 23:41:03
+-- Tiempo de generación: 02-06-2025 a las 01:49:16
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -28,7 +28,7 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `bigfive` (
-  `id_bigfive` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_usuario` int(11) NOT NULL,
   `neuroticismo` decimal(4,2) NOT NULL,
   `extraversion` decimal(4,2) NOT NULL,
@@ -38,6 +38,17 @@ CREATE TABLE `bigfive` (
   `fecha_creacion` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `bigfive`
+--
+
+INSERT INTO `bigfive` (`id`, `id_usuario`, `neuroticismo`, `extraversion`, `apertura`, `amabilidad`, `responsabilidad`, `fecha_creacion`) VALUES
+(1, 5, 3.20, 4.10, 2.80, 4.50, 3.90, '2025-05-29 06:25:12'),
+(2, 5, 3.20, 4.10, 2.80, 4.50, 3.90, '2025-05-29 06:38:04'),
+(3, 1, 3.20, 1.30, 1.00, 1.00, 1.00, '2025-05-29 06:40:36'),
+(4, 1, 3.00, 3.00, 2.00, 2.00, 2.00, '2025-05-29 07:11:11'),
+(5, 1, 4.00, 4.00, 5.00, 2.00, 3.00, '2025-05-29 07:16:52');
+
 -- --------------------------------------------------------
 
 --
@@ -45,13 +56,13 @@ CREATE TABLE `bigfive` (
 --
 
 CREATE TABLE `cita` (
-  `id_cita` int NOT NULL,
-  `paciente_id` int NOT NULL,
-  `especialista_id` int NOT NULL,
-  `fecha` timestamp NOT NULL,
+  `id_cita` int(11) NOT NULL,
+  `paciente_id` int(11) NOT NULL,
+  `especialista_id` int(11) NOT NULL,
+  `fecha` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `estado` text NOT NULL,
   `descripcion` text NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `cita`
@@ -63,6 +74,19 @@ INSERT INTO `cita` (`id_cita`, `paciente_id`, `especialista_id`, `fecha`, `estad
 (4, 3, 4, '2025-05-28 11:00:00', 'terminada', 'a\r\n'),
 (5, 2, 4, '2025-05-28 12:00:00', 'en confirmacion', 'a\r\n');
 
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `mensajes`
+--
+
+CREATE TABLE `mensajes` (
+  `id_mensaje` int(11) NOT NULL,
+  `id_paciente` int(11) NOT NULL,
+  `id_especialista` int(11) NOT NULL,
+  `mensaje` text NOT NULL,
+  `fecha` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -73,7 +97,8 @@ INSERT INTO `cita` (`id_cita`, `paciente_id`, `especialista_id`, `fecha`, `estad
 CREATE TABLE `observaciones` (
   `id_observacion` int(11) NOT NULL,
   `id_cita` int(11) NOT NULL,
-  `observacion` text NOT NULL
+  `observacion` text NOT NULL,
+  `fecha` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -88,7 +113,7 @@ CREATE TABLE `usuarios` (
   `correo` text NOT NULL,
   `password` text NOT NULL,
   `rol` text NOT NULL,
-  `bigFive` tinyint(1) NOT NULL
+  `bigFive` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -96,7 +121,11 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id_usuario`, `usuario`, `correo`, `password`, `rol`, `bigFive`) VALUES
-(1, 'jose ramon', 'x@mail.com', 'x', 'paciente', 0);
+(1, 'juan_perez', 'juan@example.com', '1234abcd', 'admin', 1),
+(2, 'maria_rios', 'maria@example.com', 'abcd1234', 'paciente', 0),
+(3, 'carlos_vega', 'carlos@example.com', 'passcarlos', 'paciente', 0),
+(4, 'ana_soto', 'ana@example.com', 'anasegura', 'especialista', 0),
+(5, 'luis_morales', 'luis@example.com', 'luisclave', 'paciente', 0);
 
 --
 -- Índices para tablas volcadas
@@ -110,12 +139,12 @@ ALTER TABLE `bigfive`
   ADD KEY `id_usuario` (`id_usuario`);
 
 --
--- Indices de la tabla `citas`
+-- Indices de la tabla `cita`
 --
-ALTER TABLE `citas`
+ALTER TABLE `cita`
   ADD PRIMARY KEY (`id_cita`),
-  ADD KEY `id_paciente` (`id_paciente`),
-  ADD KEY `id_especialista` (`id_especialista`);
+  ADD KEY `id_paciente` (`paciente_id`),
+  ADD KEY `id_especialista` (`especialista_id`);
 
 --
 -- Indices de la tabla `mensajes`
@@ -144,13 +173,13 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `bigfive`
 --
 ALTER TABLE `bigfive`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
--- AUTO_INCREMENT de la tabla `citas`
+-- AUTO_INCREMENT de la tabla `cita`
 --
-ALTER TABLE `citas`
-  MODIFY `id_cita` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `cita`
+  MODIFY `id_cita` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `mensajes`
@@ -168,7 +197,7 @@ ALTER TABLE `observaciones`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- Restricciones para tablas volcadas
@@ -181,17 +210,17 @@ ALTER TABLE `bigfive`
   ADD CONSTRAINT `bigfive_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Filtros para la tabla `citas`
+-- Filtros para la tabla `cita`
 --
-ALTER TABLE `citas`
-  ADD CONSTRAINT `citas_ibfk_1` FOREIGN KEY (`id_paciente`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `citas_ibfk_2` FOREIGN KEY (`id_especialista`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE `cita`
+  ADD CONSTRAINT `cita_ibfk_1` FOREIGN KEY (`paciente_id`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `cita_ibfk_2` FOREIGN KEY (`especialista_id`) REFERENCES `usuarios` (`id_usuario`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Filtros para la tabla `observaciones`
 --
 ALTER TABLE `observaciones`
-  ADD CONSTRAINT `observaciones_ibfk_1` FOREIGN KEY (`id_cita`) REFERENCES `citas` (`id_cita`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `observaciones_ibfk_1` FOREIGN KEY (`id_cita`) REFERENCES `cita` (`id_cita`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
