@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { ChatbotModalComponent } from '../chatbot-modal/chatbot-modal.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
-import { OpenAIService } from '../../services/openai.service';
+import { OpenAIService } from '../../../services/openai.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
