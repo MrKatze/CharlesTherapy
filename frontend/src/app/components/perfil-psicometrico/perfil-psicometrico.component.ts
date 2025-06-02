@@ -4,7 +4,7 @@ import { ChatbotModalComponent } from '../chatbot-modal/chatbot-modal.component'
 import OpenAI from 'openai';
 import { SidebarComponent } from "../sidebar/sidebar.component";
 import { BigFiveQuestion, BigFiveResult } from '../../../models/bigfive.model';
-import { BigFiveService } from '../../services/bigfive.service';
+import { BigFiveService } from '../../../services/bigfive.service';
 
 
 @Component({
@@ -53,10 +53,24 @@ export class PerfilPsicometricoComponent implements OnInit {
   const id_usuario = Number(usuario.id_usuario);
   //console.log('ID de usuario:', id_usuario);
 
+  interface BigFiveApiResult {
+    neuroticismo: string | number;
+    extraversion: string | number;
+    apertura: string | number;
+    amabilidad: string | number;
+    responsabilidad: string | number;
+    [key: string]: any;
+  }
+
+  interface BigFiveApiResponse {
+    length: number;
+    [index: number]: BigFiveApiResult;
+  }
+
   this.bigFiveService.getResultsByUser(id_usuario).subscribe({
-    next: (resultados) => {
+    next: (resultados: BigFiveApiResponse) => {
       if (resultados.length > 0) {
-        const r = resultados[resultados.length - 1];
+        const r: BigFiveApiResult = resultados[resultados.length - 1];
         this.bigFiveResult = {
           neuroticismo: Number(r.neuroticismo),
           extraversion: Number(r.extraversion),
@@ -66,7 +80,7 @@ export class PerfilPsicometricoComponent implements OnInit {
         };
       }
     },
-    error: (err) => {
+    error: (err: any) => {
       console.error('Error al obtener resultados Big Five:', err);
     }
   });
