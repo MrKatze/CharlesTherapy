@@ -74,7 +74,7 @@ export class BigfiveTestComponent {
     { text: 'A veces engaño a los demás para salirme con la mía.', trait: 'responsabilidad', section: 5 },
   ];
   result: BigFiveResult | null = null;
-  userId: number = 1; // Reemplaza por el id real del usuario autenticado
+  userId: number = 0; // Reemplaza por el id real del usuario autenticado
 
   @Output() completed = new EventEmitter<void>();
 
@@ -99,6 +99,17 @@ export class BigfiveTestComponent {
         this.questions.map(() => this.fb.control<number | null>(null, Validators.required))
       )
     });
+
+    const usuarioStr = localStorage.getItem('usuario');
+    const usuario = usuarioStr ? JSON.parse(usuarioStr) : null;
+
+    if (usuario && usuario.id_usuario) {
+      this.userId = Number(usuario.id_usuario);
+      console.log('ID de usuario obtenido del localStorage:', this.userId);
+    } else {
+      console.warn('No se encontró el ID del usuario en el localStorage.');
+    }
+
   }
 
   get pagedQuestions(): BigFiveQuestion[] {

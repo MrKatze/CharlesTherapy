@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-sidebar',
@@ -9,6 +11,8 @@ import { Component, OnInit } from '@angular/core';
 export class SidebarComponent implements OnInit {
   estadoAnimo: string = 'neutral';
   colorClase: string = 'sidebar-neutral';
+
+  constructor(private router: Router) {}
 
   ngOnInit() {
     // Leer el estado de ánimo del localStorage (simulado)
@@ -45,5 +49,10 @@ export class SidebarComponent implements OnInit {
       case 'neutral':
       default: return 'sidebar-neutral';
     }
+  }
+
+  cerrarSesion(): void {
+    localStorage.clear(); // O localStorage.removeItem('usuario');
+    this.router.navigate(['/login']); // Cambia '/login' por tu ruta de inicio de sesión
   }
 }

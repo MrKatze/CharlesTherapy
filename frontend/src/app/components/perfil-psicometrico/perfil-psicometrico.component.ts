@@ -47,11 +47,11 @@ export class PerfilPsicometricoComponent implements OnInit {
   // 🔄 Asigna datos al paciente desde el localStorage
   this.paciente.nombre = usuario.usuario || 'Desconocido';
   this.paciente.email = usuario.correo || '---';
-  console.log('Datos del paciente:', this.paciente);
+  //console.log('Datos del paciente:', this.paciente);
   // 🔄 Obtiene el ID del usuario
 
   const id_usuario = Number(usuario.id_usuario);
-  console.log('ID de usuario:', id_usuario);
+  //console.log('ID de usuario:', id_usuario);
 
   this.bigFiveService.getResultsByUser(id_usuario).subscribe({
     next: (resultados) => {

@@ -41,16 +41,25 @@ export class PrincipalComponent implements OnInit {
   constructor(private router: Router) {}
 
   ngOnInit() {
-    // Solo acceder a localStorage si está en el navegador
-    if (typeof window !== 'undefined' && window.localStorage) {
-      const usuarioStr = localStorage.getItem('usuario');
-      if (usuarioStr) {
-        this.usuario = JSON.parse(usuarioStr);
-        // Mostrar modal si no ha completado el test Big Five
-        this.showBigFiveModal = !this.usuario.bigFive;
-      }
+    const usuarioStr = localStorage.getItem('usuario');
+
+    if (!usuarioStr) {
+      console.warn('No hay datos de usuario en el localStorage');
+      return;
+    }
+
+    try {
+      this.usuario = JSON.parse(usuarioStr);
+      console.log('Usuario cargado:', this.usuario);
+
+      // Mostrar modal si no ha completado el test Big Five
+      this.showBigFiveModal = !this.usuario.bigFive;
+
+    } catch (error) {
+      console.error('Error al parsear datos del usuario:', error);
     }
   }
+
 
   openChat() {
     this.showChatModal = true;
