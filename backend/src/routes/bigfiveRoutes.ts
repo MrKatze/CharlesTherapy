@@ -3,7 +3,7 @@ import { guardarBigFive, obtenerBigFivePorUsuario } from '../controllers/bigfive
 
 const router = Router();
 
-router.post('/bigfive', guardarBigFive as any);
-router.get('/bigfive/:id_usuario', obtenerBigFivePorUsuario as any);
+router.post('/', guardarBigFive as any);
+router.get('/:id_usuario', obtenerBigFivePorUsuario as any);
 
 export default router;

@@ -7,7 +7,7 @@ export interface BigFiveQuestion {
 export interface BigFiveResult {
   id_usuario: number;
   neuroticismo: number;
-  extraversión: number;
+  extraversion: number;
   apertura: number;
   amabilidad: number;
   responsabilidad: number;

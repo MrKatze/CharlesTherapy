@@ -17,6 +17,8 @@ export class RegistroComponent {
   password = '';
   tipo = '';
   edad: number | null = null;
+  cedula = ''; // Nueva variable
+  especialidad = ''; // Nueva variable
   loading = false;
   errorMessage = '';
   successMessage = '';
@@ -30,14 +32,20 @@ export class RegistroComponent {
       this.errorMessage = 'Por favor, completa todos los campos.';
       return;
     }
+    if (this.tipo === 'Especialista' && (!this.cedula || !this.especialidad)) {
+      this.errorMessage = 'Por favor, ingresa tu cédula profesional y especialidad.';
+      return;
+    }
     this.loading = true;
     // Ajusta los nombres de los campos según espera tu backend
-    const usuario = {
+    const usuario: any = {
       usuario: this.nombre,
       correo: this.email,
       password: this.password,
       rol: this.tipo,
-      edad: this.edad
+      edad: this.edad,
+      cedula: this.tipo === 'Especialista' ? this.cedula : null,
+      especialidad: this.tipo === 'Especialista' ? this.especialidad : null // Solo se envía si es especialista
     };
     this.usuariosService.createUsuario(usuario).subscribe({
       next: (res) => {

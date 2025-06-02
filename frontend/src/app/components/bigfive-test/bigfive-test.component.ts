@@ -2,9 +2,10 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { BigFiveQuestion, BigFiveResult } from '../../../models/bigfive.model';
-import { BigFiveService } from '../../services/bigfive.service';
+import { BigFiveService } from '../../../services/bigfive.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { UsuariosService } from '../../../services/usuarios.service';
 
 @Component({
   selector: 'app-bigfive-test',
@@ -73,22 +74,42 @@ export class BigfiveTestComponent {
     { text: 'A veces engaño a los demás para salirme con la mía.', trait: 'responsabilidad', section: 5 },
   ];
   result: BigFiveResult | null = null;
-  userId: number = 1; // Reemplaza por el id real del usuario autenticado
+  userId: number = 0; // Reemplaza por el id real del usuario autenticado
 
   @Output() completed = new EventEmitter<void>();
 
   currentPage = 0;
   pageSize = 10;
 
+  bigFiveTraits = [
+    { key: 'neuroticismo', label: 'Neuroticismo' },
+    { key: 'extraversion', label: 'Extraversión' },
+    { key: 'apertura', label: 'Apertura' },
+    { key: 'amabilidad', label: 'Amabilidad' },
+    { key: 'responsabilidad', label: 'Responsabilidad' }
+  ];
+
   constructor(
     private fb: FormBuilder,
-    private bigFiveService: BigFiveService
+    private bigFiveService: BigFiveService,
+    private usuariosService: UsuariosService
   ) {
     this.bigFiveForm = this.fb.group({
       responses: this.fb.array(
         this.questions.map(() => this.fb.control<number | null>(null, Validators.required))
       )
     });
+
+    const usuarioStr = localStorage.getItem('usuario');
+    const usuario = usuarioStr ? JSON.parse(usuarioStr) : null;
+
+    if (usuario && usuario.id_usuario) {
+      this.userId = Number(usuario.id_usuario);
+      console.log('ID de usuario obtenido del localStorage:', this.userId);
+    } else {
+      console.warn('No se encontró el ID del usuario en el localStorage.');
+    }
+
   }
 
   get pagedQuestions(): BigFiveQuestion[] {
@@ -131,6 +152,28 @@ export class BigfiveTestComponent {
     }
   }
 
+  // Cambia el valor de bigFive a 1 para el usuario actual
+  marcarBigFiveCompletado(): void {
+    this.usuariosService.getUsuarioById(this.userId).subscribe({
+      next: (usuario) => {
+        // Solo actualiza el campo bigFive, deja los demás datos igual
+        const update = { ...usuario, bigFive: 1 };
+        this.usuariosService.updateUsuario(this.userId, update).subscribe({
+          next: () => {
+            // Opcional: feedback visual
+            // alert('Estado Big Five actualizado.');
+          },
+          error: () => {
+            alert('Error al actualizar el estado Big Five del usuario.');
+          }
+        });
+      },
+      error: () => {
+        alert('No se pudo obtener el usuario para actualizar Big Five.');
+      }
+    });
+  }
+
   submit() {
     const values: number[] = (this.bigFiveForm.value.responses as (number | null)[]).map((v: number | null) => +(v ?? 0));
     const traits: any = {
@@ -154,21 +197,22 @@ export class BigfiveTestComponent {
     // Calcular promedios
     const traitAverages = {
       neuroticismo: traits.neuroticismo / counts.neuroticismo,
-      extraversión: traits.extraversión / counts.extraversión,
+      extraversion: traits['extraversión'] / counts['extraversión'],
       apertura: traits.apertura / counts.apertura,
       amabilidad: traits.amabilidad / counts.amabilidad,
       responsabilidad: traits.responsabilidad / counts.responsabilidad
     };
-    const result: BigFiveResult = {
+    const result: any = {
       id_usuario: this.userId,
       neuroticismo: traitAverages.neuroticismo,
-      extraversión: traitAverages.extraversión,
+      extraversion: traitAverages.extraversion,
       apertura: traitAverages.apertura,
       amabilidad: traitAverages.amabilidad,
       responsabilidad: traitAverages.responsabilidad
     };
     this.bigFiveService.saveResult(result).subscribe({
       next: () => {
+        this.marcarBigFiveCompletado();
         this.result = result;
         alert('Resultados guardados correctamente.');
         this.completed.emit();
@@ -177,5 +221,21 @@ export class BigfiveTestComponent {
         alert('Error al guardar resultados.');
       }
     });
+  }
+
+  getWidth(valor: number, max: number = 5): number {
+    return Math.round((valor / max) * 100);
+  }
+
+  getColor(valor: number): string {
+    if (valor >= 4) return 'alto';
+    if (valor >= 2.5) return 'medio';
+    return 'bajo';
+  }
+
+  // Helper para indexar con string en BigFiveResult
+  getResultValue(result: BigFiveResult, key: string): number {
+    // @ts-ignore
+    return result[key];
   }
 }

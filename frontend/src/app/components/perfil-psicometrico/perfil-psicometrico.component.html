@@ -1,82 +1,63 @@
 <div class="chat-container">
-    <app-sidebar></app-sidebar>
+  <app-sidebar></app-sidebar>
 
-    <main class="chat-window">
-        <header class="chat-header">
-            PERFIL DEL PACIENTE
-        </header>
+  <main class="chat-window">
+    <header class="chat-header">
+      PERFIL DEL PACIENTE
+    </header>
 
-        <section class="messages perfil-section">
-            <div class="message user perfil-bloque">
-                <h3>Información del Usuario</h3>
-                <div class="text">
-                    <strong>Usuario:</strong> {{ paciente.nombre }}<br>
-                    <strong>Correo:</strong> {{ paciente.email }}
-                </div>
+    <section class="messages perfil-section">
+      <div class="message user perfil-bloque">
+        <h3>Información del Usuario</h3>
+        <div class="text">
+          <strong>Usuario:</strong> {{ paciente.nombre }}<br />
+          <strong>Correo:</strong> {{ paciente.email }}
+        </div>
+      </div>
+
+      <!-- Botón de recomendación -->
+      <div class="message user perfil-bloque">
+        <button (click)="obtenerRecomendacion()" class="btn-recomendacion" [disabled]="loading">
+          {{ loading ? 'Cargando...' : 'Recomendación de especialistas' }}
+        </button>
+
+        <div *ngIf="recomendacion" class="recomendacion-ia">
+          <h4>Recomendación de la IA:</h4>
+          <p>{{ recomendacion }}</p>
+        </div>
+      </div>
+
+      <!-- Resultados Big Five -->
+      <div class="message user perfil-bloque">
+        <h3>Resultados Big Five</h3>
+        <div class="grafica-estadisticas" *ngIf="bigFiveResult">
+          <div class="barra" *ngFor="let trait of bigFiveTraits">
+            <span class="nombre">{{ trait.label }}</span>
+            <div class="barra-base">
+              <div class="barra-relleno"
+                   [ngClass]="getColor(getTraitValue(trait.key))"
+                   [style.width.%]="getWidth(getTraitValue(trait.key), 5)">
+              </div>
             </div>
+            <span class="valor">{{ getTraitValue(trait.key) | number:'1.2-2' }}/5</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
 
-            <div class="message user perfil-bloque">
-                <h3>Gráfico de Estado Emocional</h3>
-                <div class="grafica-estadisticas">
-                    <div class="barra">
-                        <span class="nombre">Depresión</span>
-                        <div class="barra-base">
-                            <div class="barra-relleno" [ngClass]="getColor(paciente.estadisticas.depresion)"
-                                [style.width.%]="getWidth(paciente.estadisticas.depresion)">
-                            </div>
-                        </div>
-                        <span class="valor">{{ paciente.estadisticas.depresion }}%</span>
-                    </div>
+  <!-- Botón flotante para abrir el chat -->
+  <div class="chat-fab" (click)="openChat()">
+    <i class="fa-solid fa-robot"></i>
+  </div>
 
-                    <div class="barra">
-                        <span class="nombre">Estrés</span>
-                        <div class="barra-base">
-                            <div class="barra-relleno" [ngClass]="getColor(paciente.estadisticas.estres)"
-                                [style.width.%]="getWidth(paciente.estadisticas.estres)">
-                            </div>
-                        </div>
-                        <span class="valor">{{ paciente.estadisticas.estres }}%</span>
-                    </div>
-
-                    <div class="barra">
-                        <span class="nombre">Ansiedad</span>
-                        <div class="barra-base">
-                            <div class="barra-relleno" [ngClass]="getColor(paciente.estadisticas.ansiedad)"
-                                [style.width.%]="getWidth(paciente.estadisticas.ansiedad)">
-                            </div>
-                        </div>
-                        <span class="valor">{{ paciente.estadisticas.ansiedad }}%</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Botón de recomendación -->
-            <div class="message user perfil-bloque">
-                <button (click)="obtenerRecomendacion()" class="btn-recomendacion" [disabled]="loading">
-                    {{ loading ? 'Cargando...' : 'Recomendación de especialistas' }}
-                </button>
-
-                <div *ngIf="recomendacion" class="recomendacion-ia">
-                    <h4>Recomendación de la IA:</h4>
-                    <p>{{ recomendacion }}</p>
-                </div>
-            </div>
-
-        </section>
-    </main>
-
-    <!-- Botón flotante para abrir el chat -->
-    <div class="chat-fab" (click)="openChat()">
-      <i class="fa-solid fa-robot"></i>
-    </div>
-
-    <!-- Modal general del chatbot -->
-    <app-chatbot-modal
-      [show]="showChatModal"
-      [messages]="messages"
-      [userInput]="userInput"
-      [loading]="loadingChat"
-      [sendMessage]="sendMessage.bind(this)"
-      [closeChat]="closeChat.bind(this)">
-    </app-chatbot-modal>
+  <!-- Modal general del chatbot -->
+  <app-chatbot-modal
+    [show]="showChatModal"
+    [messages]="messages"
+    [userInput]="userInput"
+    [loading]="loadingChat"
+    [sendMessage]="sendMessage.bind(this)"
+    [closeChat]="closeChat.bind(this)">
+  </app-chatbot-modal>
 </div>
