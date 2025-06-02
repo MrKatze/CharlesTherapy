@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -5,13 +6,14 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-sidebar',
   standalone: true,
+  imports: [CommonModule],
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.css']
 })
 export class SidebarComponent implements OnInit {
   estadoAnimo: string = 'neutral';
   colorClase: string = 'sidebar-neutral';
-
+  rol:string = ''
   constructor(private router: Router) {}
 
   ngOnInit() {
@@ -36,7 +38,9 @@ export class SidebarComponent implements OnInit {
     // 2. Crear un servicio para encapsular el acceso a localStorage y manejar entornos donde no esté disponible.
     // 3. Mockear localStorage en pruebas unitarias para evitar errores.
     // 4. Usar almacenamiento alternativo (como un objeto en memoria) en entornos donde localStorage no esté disponible.
-
+    this.rol = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario') || '{}').rol : 'paciente';
+    
+    console.log('Rol del usuario:', this.rol);
     this.colorClase = this.getColorClass(this.estadoAnimo);
   }
 

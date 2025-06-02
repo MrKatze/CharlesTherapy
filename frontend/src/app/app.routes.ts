@@ -15,7 +15,8 @@ export const routes: Routes = [
   { path: 'registro', component: RegistroComponent },
   { path: 'perfilPsicometrico', component: PerfilPsicometricoComponent },
   { path: 'historial', component: HistorialComponent },
-  { path: 'citas', component: CitasComponent },
+  { path: 'citas/especialista', component: CitasComponent },
+  { path: 'citas/paciente', component: CitasComponent },
   { path: 'bigfive', component: BigfiveTestComponent },
   { path: 'chatbot', component: ChatbotComponent },
 ];

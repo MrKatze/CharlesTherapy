@@ -1,7 +1,8 @@
 /* Copiado de principal.component.css solo la parte de la sidebar y relacionados */
 .sidebar {
+  position: fixed;
   width: 60px;
-  height: 100dvh;
+  height: 100vh;
   background-color: #d2e4e2;
   border-right: 2px solid #b2cfc9;
   display: flex;
@@ -10,7 +11,7 @@
   padding-top: 10px;
   gap: 20px;
   transition: width 0.3s ease, background 0.5s;
-  overflow: hidden;
+  /* overflow: hidden; */
   animation: header-sidebar-rainbow 48s linear infinite;
 }
 
