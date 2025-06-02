@@ -49,12 +49,12 @@ class UsuariosController {
     createUsuario(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                const { usuario, correo, password, rol, bigFive } = req.body;
-                const result = yield dataBase_1.default.query('INSERT INTO usuarios (usuario, correo, password, rol, bigFive) VALUES (?, ?, ?, ?, ?)', [usuario, correo, password, rol, bigFive !== null && bigFive !== void 0 ? bigFive : false]);
-                res.status(201).json({ message: 'Usuario creado', id: result[0].insertId });
+                const { usuario, correo, password, rol, cedula, especialidad } = req.body;
+                const result = yield dataBase_1.default.query('INSERT INTO usuarios (usuario, correo, password, rol, cedula, especialidad) VALUES (?, ?, ?, ?, ?, ?)', [usuario, correo, password, rol, cedula, especialidad]);
+                res.status(201).json({ id: result[0].insertId, usuario, correo, rol, cedula, especialidad });
             }
             catch (error) {
-                res.status(500).json({ message: 'Error al crear el usuario', error });
+                res.status(500).json({ error: 'Error al crear usuario', detalle: error });
             }
         });
     }
@@ -63,17 +63,17 @@ class UsuariosController {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 const { id } = req.params;
-                const { usuario, correo, password, rol, bigFive } = req.body;
-                const result = yield dataBase_1.default.query('UPDATE usuarios SET usuario = ?, correo = ?, password = ?, rol = ?, bigFive = ? WHERE id_usuario = ?', [usuario, correo, password, rol, bigFive, id]);
+                const { usuario, correo, password, cedula, bigFive, especialidad } = req.body;
+                const result = yield dataBase_1.default.query('UPDATE usuarios SET usuario = ?, correo = ?, password = ?, cedula = ?, bigFive = ?, especialidad = ? WHERE id_usuario = ?', [usuario, correo, password, cedula, bigFive, especialidad, id]);
                 if (result[0].affectedRows === 0) {
                     res.status(404).json({ message: 'Usuario no encontrado' });
                 }
                 else {
-                    res.json({ message: 'Usuario actualizado' });
+                    res.json({ id, usuario, correo, cedula, bigFive, especialidad });
                 }
             }
             catch (error) {
-                res.status(500).json({ message: 'Error al actualizar el usuario', error });
+                res.status(500).json({ error: 'Error al actualizar usuario' });
             }
         });
     }

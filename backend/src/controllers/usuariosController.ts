@@ -30,11 +30,14 @@ class UsuariosController {
   // Crear un nuevo usuario
   async createUsuario(req: Request, res: Response): Promise<void> {
     try {
-      const { usuario, correo, password, rol, bigFive } = req.body;
-      const result = await pool.query('INSERT INTO usuarios (usuario, correo, password, rol, bigFive) VALUES (?, ?, ?, ?, ?)', [usuario, correo, password, rol, bigFive ?? false]);
-      res.status(201).json({ message: 'Usuario creado', id: (result[0] as any).insertId });
+      const { usuario, correo, password, rol, cedula, especialidad } = req.body;
+      const result = await pool.query(
+        'INSERT INTO usuarios (usuario, correo, password, rol, cedula, especialidad) VALUES (?, ?, ?, ?, ?, ?)',
+        [usuario, correo, password, rol, cedula, especialidad]
+      );
+      res.status(201).json({ id: (result[0] as any).insertId, usuario, correo, rol, cedula, especialidad });
     } catch (error) {
-      res.status(500).json({ message: 'Error al crear el usuario', error });
+      res.status(500).json({ error: 'Error al crear usuario', detalle: error });
     }
   }
 
@@ -42,15 +45,18 @@ class UsuariosController {
   async updateUsuario(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const { usuario, correo, password, rol, bigFive } = req.body;
-      const result = await pool.query('UPDATE usuarios SET usuario = ?, correo = ?, password = ?, rol = ?, bigFive = ? WHERE id_usuario = ?', [usuario, correo, password, rol, bigFive, id]);
+      const { usuario, correo, password, cedula, bigFive, especialidad } = req.body;
+      const result = await pool.query(
+        'UPDATE usuarios SET usuario = ?, correo = ?, password = ?, cedula = ?, bigFive = ?, especialidad = ? WHERE id_usuario = ?',
+        [usuario, correo, password, cedula, bigFive, especialidad, id]
+      );
       if ((result[0] as any).affectedRows === 0) {
         res.status(404).json({ message: 'Usuario no encontrado' });
       } else {
-        res.json({ message: 'Usuario actualizado' });
+        res.json({ id, usuario, correo, cedula, bigFive, especialidad });
       }
     } catch (error) {
-      res.status(500).json({ message: 'Error al actualizar el usuario', error });
+      res.status (500).json({ error: 'Error al actualizar usuario' });
     }
   }
 
