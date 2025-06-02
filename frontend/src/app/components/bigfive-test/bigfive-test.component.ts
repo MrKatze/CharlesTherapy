@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { BigFiveQuestion, BigFiveResult } from '../../../models/bigfive.model';
-import { BigFiveService } from '../../services/bigfive.service';
+import { BigFiveService } from '../../../services/bigfive.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { UsuariosService } from '../../../services/usuarios.service';
