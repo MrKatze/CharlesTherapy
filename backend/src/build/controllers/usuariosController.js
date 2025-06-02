@@ -114,5 +114,18 @@ class UsuariosController {
             }
         });
     }
+    // Obtener usuarios por rol
+    getUsuariosByRol(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { rol } = req.params;
+                const [rows] = yield dataBase_1.default.query('SELECT * FROM usuarios WHERE rol = ?', [rol]);
+                res.json(rows);
+            }
+            catch (error) {
+                res.status(500).json({ message: 'Error al obtener usuarios por rol', error });
+            }
+        });
+    }
 }
 exports.usuariosController = new UsuariosController();

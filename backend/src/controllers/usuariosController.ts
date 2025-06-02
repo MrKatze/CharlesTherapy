@@ -87,6 +87,16 @@ class UsuariosController {
       res.status(500).json({ message: 'Error al iniciar sesión', error });
     }
   }
+  // Obtener usuarios por rol
+  async getUsuariosByRol(req: Request, res: Response): Promise<void> {
+    try {
+      const { rol } = req.params;
+      const [rows] = await pool.query('SELECT * FROM usuarios WHERE rol = ?', [rol]);
+      res.json(rows);
+    } catch (error) {
+      res.status(500).json({ message: 'Error al obtener usuarios por rol', error });
+    }
+  }
 }
 
 

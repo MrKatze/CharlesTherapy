@@ -40,4 +40,9 @@ export class UsuariosService {
   login(email: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, { correo: email, password });
   }
+
+  // Obtener usuarios por rol
+  getUsuariosByRol(rol: string): Observable<any> {
+    return this.http.get(`${this.apiUrl}/rol/${rol}`);
+  }
 }

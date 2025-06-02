@@ -12,6 +12,8 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import esLocale from '@fullcalendar/core/locales/es';
+import { Router } from '@angular/router';
+import { UsuariosService } from '../../../services/usuarios.service';
 
 
 @Component({
@@ -27,27 +29,20 @@ import esLocale from '@fullcalendar/core/locales/es';
 export class CitasComponent implements OnInit {
 
   //Variables
-  fecha: Date = new Date();
   paciente_id = 4;
   cita_predefinida = {
     fecha: new Date(),
     paciente_id: 0,
-    especialidad_id: this.paciente_id,
+    paciente_nombre: '',
+    especialista_id: this.paciente_id,
     estado: 'pendiente',
     id_cita: 0,
     descripcion: ''
   };
   cita: CitaModel = this.cita_predefinida
-
   new_cita: CitaModel = this.cita_predefinida
 
-
-  horasDisponibles: string[] = [
-    '09:00', '10:00', '11:00',
-    '12:00', '13:00', '14:00',
-    '15:00', '16:00', '17:00',
-  ];
-
+  //calendario principal
   calendarOptions: CalendarOptions = {
     initialView: 'dayGridMonth',
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -56,8 +51,8 @@ export class CitasComponent implements OnInit {
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay'
     },
-    locales:[esLocale],
-    locale:'es',
+    locales: [esLocale],
+    locale: 'es',
     dateClick: this.handleDateClick.bind(this),
     eventClick: this.handleEventClick.bind(this),
     editable: true,
@@ -67,35 +62,95 @@ export class CitasComponent implements OnInit {
     slotLabelInterval: '01:00',     // Etiquetas del lado izquierdo cada 1 hora
     selectOverlap: false,
   };
-  events: EventInput[] = [];
+  //calendario del modal de creacion de citas
+  calendarModalOptions: CalendarOptions = {
+    initialView: 'timeGridWeek',
+    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    },
+    locales: [esLocale],
+    locale: 'es',
+    dateClick: this.handleDateClickModal.bind(this),
+    // eventClick: this.handleEventClick.bind(this),
+    editable: true,
+    selectable: true,
+    selectMirror: true,
+    slotDuration: '01:00:00',       // Cambia el tamaño del "bloque" visible a 1 hora
+    slotLabelInterval: '01:00',     // Etiquetas del lado izquierdo cada 1 hora
+    selectOverlap: false,
+  };
+  //calendario del modal de actualizacion de citas
+  calendarModalUpdateOptions: CalendarOptions = {
+    initialView: 'timeGridWeek',
+    plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: 'dayGridMonth,timeGridWeek,timeGridDay'
+    },
+    locales: [esLocale],
+    locale: 'es',
+    dateClick: this.handleDateClick.bind(this),
+    eventClick: this.handleEventClick.bind(this),
+    editable: true,
+    selectable: true,
+    selectMirror: true,
+    slotDuration: '01:00:00',       // Cambia el tamaño del "bloque" visible a 1 hora
+    slotLabelInterval: '01:00',     // Etiquetas del lado izquierdo cada 1 hora
+    selectOverlap: false,
+  };
+
+
   mostrarModal: boolean = false;
-  fechaModal = new Date();
-  horaModal = new Date().toUTCString();
-  citasDelDia = []
+  mostrarModalActualizar: boolean = false;
+  user_id:number = -1;
+  pacientes: any [] = [];
   //Fin Variables
 
-  constructor(private citasServices: CitasService) { }
+  constructor(private citasServices: CitasService, private usuarioServices:UsuariosService ,private Router: Router) { 
+    this.user_id = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario') || '{}').id_usuario : -1;
+    console.log(this.user_id)
+    if (this.user_id==-1){
+      this.Router.navigate(['/login']);
+    }
+  }
 
   ngOnInit() {
     this.obtenerCitas();
   }
-  
-  obtenerCitas(){
-    this.citasServices.getCitasByEspecialistaId(this.cita.especialidad_id).subscribe({
-      next:(response)=>{
-        this.calendarOptions.events = response.map(aux=>this.estilosCitas(aux.estado,aux.descripcion,aux.fecha,aux.id_cita))
+
+  obtenerCitas() {
+    this.citasServices.getCitasByEspecialistaId(this.cita.especialista_id).subscribe({
+      next: (response) => {
+        console.log(response)
+        this.calendarModalUpdateOptions.events =  this.calendarOptions.events = response.map(aux => this.estilosCitas(aux.estado, aux.paciente_nombre, aux.fecha, aux.id_cita))
+        
       }
     })
   }
 
 
   agendarCita() {
-      this.mostrarModal = false
+    this.new_cita.especialista_id = this.user_id;
     
+    console.log(this.new_cita);
+    this.mostrarModal = false
+    this.citasServices.createCita(this.new_cita).subscribe({
+      next: (response) => {
+        console.log('Cita creada:', response);
+        this.obtenerCitas(); // Actualizar las citas después de crear una nueva
+        this.new_cita = { ...this.cita_predefinida }; // Reiniciar el formulario
+      }
+      ,
+      error: (error) => {
+        console.error('Error al crear la cita:', error);
+      }
+    });
   }
-  actualizarCita(){
 
-  }
 
   handleDateClick(arg: any) {
     // console.log(this.calendarOptions.eventContent?.toString())
@@ -108,15 +163,21 @@ export class CitasComponent implements OnInit {
   handleEventClick(arg: any) {
     const event = arg.event;
     // this.mostrarModal=true
-    if (confirm(`¿Deseas eliminar la cita de ${event.extendedProps.id_cita}?`)) {
-      event.remove();
-      this.events = this.events.filter(e => e !== event);
-    }
+    this.citasServices.getCitaById(event.extendedProps.id_cita).subscribe({
+      next: (response) => {
+        console.log(response);
+        this.cita = response;
+        this.mostrarModalActualizar = true; // Mostrar el modal de actualización
+      },
+      error: (error) => {
+        console.error('Error al obtener la cita:', error);
+      }
+    });
   }
 
-  
 
- estilosCitas(estado: string, descripcion: string, fecha: Date, id:number) {
+
+  estilosCitas(estado: string, descripcion: string, fecha: Date, id: number) {
     switch (estado) {
       case 'cancelada':
         return {
@@ -124,7 +185,7 @@ export class CitasComponent implements OnInit {
           start: fecha,
           textColor: "#ffffff",
           color: "#dc3545",
-          extendedProps:{
+          extendedProps: {
             id_cita: id
           }
         };
@@ -134,7 +195,7 @@ export class CitasComponent implements OnInit {
           start: fecha,
           textColor: "#ffffff",
           color: "#007bff",
-          extendedProps:{
+          extendedProps: {
             id_cita: id
           }
         }
@@ -144,7 +205,7 @@ export class CitasComponent implements OnInit {
           start: fecha,
           textColor: "#ffffff",
           color: "#28a745",
-          extendedProps:{
+          extendedProps: {
             id_cita: id
           }
         }
@@ -154,7 +215,7 @@ export class CitasComponent implements OnInit {
           start: fecha,
           textColor: "#000000",
           color: "#ffc107",
-          extendedProps:{
+          extendedProps: {
             id_cita: id
           }
         }
@@ -162,11 +223,47 @@ export class CitasComponent implements OnInit {
         return {
           title: descripcion,
           start: fecha,
-          extendedProps:{
+          extendedProps: {
             id_cita: id
           }
         }
     }
   }
+  
+  abirModal() {
+    this.usuarioServices.getUsuariosByRol('paciente').subscribe({
+      next: (response) => {
+        console.log(response);
+        this.pacientes = response;
+      },
+      error: (error) => {
+        console.error('Error al obtener pacientes:', error);
+      }
+    });
+    this.mostrarModal = true;
+  
+  }
+ 
+  handleDateClickModal(arg: any) {
+    const fechaSeleccionada = new Date(arg.date);
+    this.new_cita.fecha = new Date(fechaSeleccionada); // Fecha con hora
+    console.log(this.new_cita.fecha.toLocaleString());
+
+  }
+  
+  actualizarCita() {
+    this.citasServices.updateCita(this.cita.id_cita, this.cita).subscribe({
+      next: (response) => {
+        console.log('Cita actualizada:', response);
+        this.obtenerCitas(); // Actualizar las citas después de actualizar una
+        this.mostrarModalActualizar = false; // Cerrar el modal después de actualizar la cita
+      
+      },
+      error: (error) => {
+        console.error('Error al actualizar la cita:', error);
+      }
+    });
+  }
 }
+
 
