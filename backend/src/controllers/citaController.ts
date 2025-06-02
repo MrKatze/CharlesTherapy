@@ -50,10 +50,10 @@ class CitaController {
 
     public async update(req: Request, res: Response): Promise<void> {
         const { id } = req.params;
-        const { fecha, paciente_id, especialista_id, descripcion } = req.body;
-        const [result]: any = await pool.query('UPDATE cita SET descripcion = ?, fecha = ?, paciente_id = ?, especialista_id = ? WHERE id_cita = ?', [descripcion, fecha, paciente_id, especialista_id, id]);
+        const { fecha, paciente_id, especialista_id, descripcion,estado } = req.body;
+        const [result]: any = await pool.query('UPDATE cita SET descripcion = ?, fecha = ?, paciente_id = ?, especialista_id = ?, estado = ? WHERE id_cita = ?', [descripcion, fecha, paciente_id, especialista_id, estado, id]);
         if (result.affectedRows > 0) {
-            res.json({ message: 'Cita actualizada' });
+            res.json(result);
         } else {
             res.status(404).json({ message: 'Cita no encontrada' });
         }
@@ -71,7 +71,16 @@ class CitaController {
 
     public async getCitasByPaciente(req: Request, res: Response): Promise<void> {
         const { paciente_id } = req.params;
-        const [resp]: any = await pool.query('SELECT * FROM cita WHERE paciente_id = ?', [paciente_id]);
+        const [resp]: any = await pool.query(`SELECT 
+            c.*, 
+            u.usuario AS paciente_nombre
+        FROM 
+            cita c
+        JOIN 
+            usuarios u ON c.paciente_id = u.id_usuario
+        WHERE
+            c.paciente_id = ?;
+            `, [paciente_id]);
         if (resp.length === 0) {
             res.status(404).json({ message: 'No se encontraron citas para este paciente' });
         } else if (resp.length > 1) {

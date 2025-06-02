@@ -90,8 +90,8 @@
         <div class="form-group">
           <p>Fecha y hora: {{cita.fecha.toLocaleString()}}</p>
           <p>Paciente: {{cita.paciente_nombre}}</p>
-          <label for="estado">Estado de la cita</label>
-          <select name="estado" id="estado" [(ngModel)]="cita.estado" name="tipo" >
+          <label for="estado-modal">Estado de la cita</label>
+          <select name="estado-modal" id="estado-modal" [(ngModel)]="cita.estado" name="estado-modal" required>
             <option value="proxima">Próxima</option>
             <option value="en confirmacion">En Confirmación</option>
             <option value="terminada">Terminada</option>
@@ -102,7 +102,7 @@
         </div>
         
         
-        <button type="submit" class="btn-agendar">Guardar cambios</button>
+        <button type="submit" class="btn-agendar">Guardar nuevos cambios</button>
       </form>
       
     </div>

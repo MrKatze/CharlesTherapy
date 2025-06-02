@@ -111,21 +111,22 @@ export class CitasComponent implements OnInit {
   //Fin Variables
 
   constructor(private citasServices: CitasService, private usuarioServices:UsuariosService ,private Router: Router) { 
-    this.user_id = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario') || '{}').id_usuario : -1;
-    console.log(this.user_id)
-    if (this.user_id==-1){
-      this.Router.navigate(['/login']);
-    }
+
   }
 
   ngOnInit() {
+    this.user_id = localStorage.getItem('usuario') ? JSON.parse(localStorage.getItem('usuario') || '{}').id_usuario : -1;
+    // console.log(this.user_id)
+    if (this.user_id==-1){
+      this.Router.navigate(['/login']);
+    }
     this.obtenerCitas();
   }
 
   obtenerCitas() {
     this.citasServices.getCitasByEspecialistaId(this.cita.especialista_id).subscribe({
       next: (response) => {
-        console.log(response)
+        // console.log(response)
         this.calendarModalUpdateOptions.events =  this.calendarOptions.events = response.map(aux => this.estilosCitas(aux.estado, aux.paciente_nombre, aux.fecha, aux.id_cita))
         
       }
@@ -140,7 +141,7 @@ export class CitasComponent implements OnInit {
     this.mostrarModal = false
     this.citasServices.createCita(this.new_cita).subscribe({
       next: (response) => {
-        console.log('Cita creada:', response);
+        // console.log('Cita creada:', response);
         this.obtenerCitas(); // Actualizar las citas después de crear una nueva
         this.new_cita = { ...this.cita_predefinida }; // Reiniciar el formulario
       }
@@ -154,19 +155,25 @@ export class CitasComponent implements OnInit {
 
   handleDateClick(arg: any) {
     // console.log(this.calendarOptions.eventContent?.toString())
-    const fechaSeleccionada = arg.dateStr; // Formato: '2025-05-28'
-
-    console.log(fechaSeleccionada)
+    const fechaSeleccionada = new Date(arg.date);
+    this.cita.fecha = new Date(fechaSeleccionada); // Fecha con hora
+    // console.log(this.cita.fecha.toLocaleString());
+    // console.log(fechaSeleccionada)
 
   }
 
   handleEventClick(arg: any) {
     const event = arg.event;
+    let auxfecha = event.start;
+    const fechaSeleccionada = new Date(arg.date);
+    // this.cita.fecha = new Date(fechaSeleccionada); // Fecha con hora
+    console.log("fecha de actualizacion",this.cita.fecha.toLocaleString());
     // this.mostrarModal=true
     this.citasServices.getCitaById(event.extendedProps.id_cita).subscribe({
       next: (response) => {
-        console.log(response);
+        // console.log(response);
         this.cita = response;
+        this.cita.fecha = auxfecha
         this.mostrarModalActualizar = true; // Mostrar el modal de actualización
       },
       error: (error) => {
@@ -233,7 +240,7 @@ export class CitasComponent implements OnInit {
   abirModal() {
     this.usuarioServices.getUsuariosByRol('paciente').subscribe({
       next: (response) => {
-        console.log(response);
+        // console.log(response);
         this.pacientes = response;
       },
       error: (error) => {
@@ -247,14 +254,14 @@ export class CitasComponent implements OnInit {
   handleDateClickModal(arg: any) {
     const fechaSeleccionada = new Date(arg.date);
     this.new_cita.fecha = new Date(fechaSeleccionada); // Fecha con hora
-    console.log(this.new_cita.fecha.toLocaleString());
+    // console.log(this.new_cita.fecha.toLocaleString());
 
   }
-  
+
   actualizarCita() {
     this.citasServices.updateCita(this.cita.id_cita, this.cita).subscribe({
       next: (response) => {
-        console.log('Cita actualizada:', response);
+        // console.log('Cita actualizada:', response);
         this.obtenerCitas(); // Actualizar las citas después de actualizar una
         this.mostrarModalActualizar = false; // Cerrar el modal después de actualizar la cita
       
@@ -263,6 +270,7 @@ export class CitasComponent implements OnInit {
         console.error('Error al actualizar la cita:', error);
       }
     });
+    this.mostrarModalActualizar = false; // Cerrar el modal después de actualizar la cita 
   }
 }
 

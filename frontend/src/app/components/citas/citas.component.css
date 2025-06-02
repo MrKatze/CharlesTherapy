@@ -1,6 +1,8 @@
 .layout {
   display: flex;
-  height: 100vh; /* O lo que necesites */
+  height: 100dvh; /* O lo que necesites */
+  max-height: 100dvh;
+  overflow-y: scroll;
 }
 .sidebar {
   flex-shrink: 0; /* Evita que se encoja */
