@@ -18,16 +18,19 @@
         </div>
       </section>
 
-      <!-- 2. Resumen Semanal -->
-      <section class="resumen-semanal card">
-        <h2>Resumen Semanal</h2>
-        <button [disabled]="!tieneResumenSemanal" class="btn-resumen">
-          Ver Resumen Semanal
+      <!-- 2. Resumen Diario -->
+      <section class="resumen-semanal card resumen-color-semanal">
+        <h2>Resumen Diario</h2>
+        <button [disabled]="!tieneResumenSemanal" class="btn-resumen resumen-btn-semanal" (click)="toggleResumen()">
+          {{ mostrarResumen ? 'Ocultar Resumen' : 'Ver Resumen Diario' }}
         </button>
-        <button *ngIf="!tieneResumenSemanal" class="btn-generar">
-          Generar Resumen
+        <button *ngIf="!tieneResumenSemanal" class="btn-generar-daily resumen-btn-daily" (click)="generarDailyResume()">
+          Generar Daily Resume
         </button>
-        <!-- Aquí irá la funcionalidad de resumen semanal -->
+        <div *ngIf="mostrarResumen && resumenDiario" class="resumen-diario-box">
+          <h3>Resumen generado:</h3>
+          <p>{{ resumenDiario }}</p>
+        </div>
       </section>
 
       <!-- 3. Citas -->
@@ -42,7 +45,7 @@
           </div>
         </ng-container>
         <ng-template #sinCita>
-          <button class="btn-agendar" (click)="abrirModalCita()">Agendar Cita</button>
+          <button class="btn-agendar" (click)="irACitas()">Agendar Cita</button>
         </ng-template>
         <!-- Aquí irá el modal de agendar cita -->
       </section>
@@ -67,5 +70,7 @@
   [show]="showChatModal"
   [messages]="messages"
   [userInput]="userInput"
-  [loading]="loading">
-</app-chatbot-modal>
+  [loading]="loading"
+  [chatSesionGuardada]="chatSesionGuardada"
+  [guardarSesionChat]="guardarSesionChat.bind(this)"
+></app-chatbot-modal>

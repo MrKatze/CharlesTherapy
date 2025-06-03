@@ -16,20 +16,52 @@ export class ChatbotModalComponent {
   @Input() messages: {role: string, content: string, animatedContent?: string}[] = [];
   @Input() userInput = '';
   @Input() loading = false;
+  @Input() chatSesionGuardada: boolean = true;
+  @Input() guardarSesionChat: () => void = () => {};
 
   private openaiService = inject(OpenAIService);
   private openai = this.openaiService.getClient();
+  usuario: any = {};
 
-  sendMessage = async () => {
+  constructor() {
+    // Obtener datos de usuario del localStorage
+    const usuarioStr = localStorage.getItem('usuario');
+    if (usuarioStr) {
+      try {
+        this.usuario = JSON.parse(usuarioStr);
+      } catch (e) {
+        this.usuario = {};
+      }
+    }
+  }
+
+  async sendMessage() {
     if (!this.userInput.trim()) return;
     this.loading = true;
     const userMessage = this.userInput;
     this.messages.push({role: 'user', content: userMessage});
     this.userInput = '';
     try {
+      // Enriquecer el prompt con datos del usuario y perfil psicométrico
+      let perfil = '';
+      if (this.usuario) {
+        perfil += `Nombre completo: ${this.usuario.nombreCompleto || this.usuario.usuario || ''}. `;
+        if (this.usuario.bigFive) {
+          perfil += `Perfil psicométrico Big Five: `;
+          if (this.usuario.bigFive.abierto) perfil += `Apertura: ${this.usuario.bigFive.abierto}. `;
+          if (this.usuario.bigFive.responsable) perfil += `Responsabilidad: ${this.usuario.bigFive.responsable}. `;
+          if (this.usuario.bigFive.extraverso) perfil += `Extraversión: ${this.usuario.bigFive.extraverso}. `;
+          if (this.usuario.bigFive.amable) perfil += `Amabilidad: ${this.usuario.bigFive.amable}. `;
+          if (this.usuario.bigFive.estable) perfil += `Estabilidad emocional: ${this.usuario.bigFive.estable}. `;
+        }
+      }
+      const enrichedMessages = [
+        { role: 'system', content: `Eres un asistente servicial y amigable. Utiliza un tono empático y constructivo. Datos del usuario: ${perfil}` },
+        ...this.messages.map(m => ({ role: m.role, content: m.content }))
+      ];
       const completion = await this.openai.chat.completions.create({
         model: 'gpt-3.5-turbo',
-        messages: this.messages.map(m => ({ role: m.role, content: m.content })) as any,
+        messages: enrichedMessages as any,
       });
       let botResponse = completion.choices[0].message?.content || '';
       botResponse = botResponse.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
@@ -42,7 +74,7 @@ export class ChatbotModalComponent {
     } finally {
       this.loading = false;
     }
-  };
+  }
 
   closeChat = () => {
     this.show = false;

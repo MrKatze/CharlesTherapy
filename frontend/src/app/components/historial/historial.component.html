@@ -31,6 +31,8 @@
     [show]="showChatModal"
     [messages]="messages"
     [userInput]="userInput"
-    [loading]="loading">
-  </app-chatbot-modal>
+    [loading]="loading"
+    [chatSesionGuardada]="chatSesionGuardada"
+    [guardarSesionChat]="guardarSesionChat.bind(this)"
+  ></app-chatbot-modal>
 </div>

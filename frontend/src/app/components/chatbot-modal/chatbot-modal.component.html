@@ -27,6 +27,9 @@
       <button (click)="sendMessage()">
         <span class="send"><i class="fa-solid fa-paper-plane"></i></span>
       </button>
+      <button *ngIf="!chatSesionGuardada" (click)="guardarSesionChat()" class="btn-guardar-chat" aria-label="Guardar sesión">
+        <i class="fa-solid fa-floppy-disk"></i>
+      </button>
     </footer>
   </div>
 </div>

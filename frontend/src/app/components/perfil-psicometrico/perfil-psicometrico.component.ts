@@ -1,11 +1,11 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatbotModalComponent } from '../chatbot-modal/chatbot-modal.component';
-import OpenAI from 'openai';
 import { SidebarComponent } from "../sidebar/sidebar.component";
-import { BigFiveQuestion, BigFiveResult } from '../../../models/bigfive.model';
-import { BigFiveService } from '../../../services/bigfive.service';
-
+import { SesionChatService } from '../../services/sesion-chat.service';
+import { BigFiveService } from '../../services/bigfive.service';
+import { BigFiveResult } from '../../models/bigfive.model';
+import { OpenAIService } from '../../services/openai.service';
 
 @Component({
   selector: 'app-perfil-psicometrico',
@@ -21,6 +21,7 @@ export class PerfilPsicometricoComponent implements OnInit {
   paciente = {
     nombre: 'Juan Pérez',
     email: 'juan.perez@example.com',
+    id_usuario: 0
   };
 
   bigFiveTraits = [
@@ -31,60 +32,53 @@ export class PerfilPsicometricoComponent implements OnInit {
     { key: 'responsabilidad', label: 'Responsabilidad' }
   ];
   // Resultados del Big Five
-  constructor(private bigFiveService: BigFiveService) { }
+  constructor(
+    private bigFiveService: BigFiveService,
+    private sesionChatService: SesionChatService,
+    private openaiService: OpenAIService
+  ) { }
 
   bigFiveResult: any = null;
 
   ngOnInit() {
-  const usuarioStr = localStorage.getItem('usuario');
-  const usuario = usuarioStr ? JSON.parse(usuarioStr) : null;
+    const usuarioStr = localStorage.getItem('usuario');
+    const usuario = usuarioStr ? JSON.parse(usuarioStr) : null;
 
-  if (!usuario || !usuario.id_usuario) {
-    console.error('Usuario no encontrado en localStorage');
-    return;
-  }
-
-  // 🔄 Asigna datos al paciente desde el localStorage
-  this.paciente.nombre = usuario.usuario || 'Desconocido';
-  this.paciente.email = usuario.correo || '---';
-  //console.log('Datos del paciente:', this.paciente);
-  // 🔄 Obtiene el ID del usuario
-
-  const id_usuario = Number(usuario.id_usuario);
-  //console.log('ID de usuario:', id_usuario);
-
-  interface BigFiveApiResult {
-    neuroticismo: string | number;
-    extraversion: string | number;
-    apertura: string | number;
-    amabilidad: string | number;
-    responsabilidad: string | number;
-    [key: string]: any;
-  }
-
-  interface BigFiveApiResponse {
-    length: number;
-    [index: number]: BigFiveApiResult;
-  }
-
-  this.bigFiveService.getResultsByUser(id_usuario).subscribe({
-    next: (resultados: BigFiveApiResponse) => {
-      if (resultados.length > 0) {
-        const r: BigFiveApiResult = resultados[resultados.length - 1];
-        this.bigFiveResult = {
-          neuroticismo: Number(r.neuroticismo),
-          extraversion: Number(r.extraversion),
-          apertura: Number(r.apertura),
-          amabilidad: Number(r.amabilidad),
-          responsabilidad: Number(r.responsabilidad)
-        };
-      }
-    },
-    error: (err: any) => {
-      console.error('Error al obtener resultados Big Five:', err);
+    if (!usuario || !usuario.id_usuario) {
+      console.error('Usuario no encontrado en localStorage');
+      return;
     }
-  });
-}
+
+    // 🔄 Asigna datos al paciente desde el localStorage
+    this.paciente.nombre = usuario.usuario || 'Desconocido';
+    this.paciente.email = usuario.correo || '---';
+    this.paciente.id_usuario = usuario.id_usuario;
+    //console.log('Datos del paciente:', this.paciente);
+    // 🔄 Obtiene el ID del usuario
+
+    const id_usuario = Number(usuario.id_usuario);
+    //console.log('ID de usuario:', id_usuario);
+
+    this.bigFiveService.getResultsByUser(id_usuario).subscribe({
+      next: (resultados: BigFiveResult[]) => {
+        if (resultados.length > 0) {
+          const r = resultados[resultados.length - 1];
+          this.bigFiveResult = {
+            neuroticismo: Number(r.neuroticismo),
+            extraversion: Number(r.extraversión),
+            apertura: Number(r.apertura),
+            amabilidad: Number(r.amabilidad),
+            responsabilidad: Number(r.responsabilidad)
+          };
+        }
+      },
+      error: (err: any) => {
+        console.error('Error al obtener resultados Big Five:', err);
+      }
+    });
+
+    this.openai = this.openaiService.getClient();
+  }
 
 
   getTraitValue(traitKey: string): number {
@@ -105,11 +99,7 @@ export class PerfilPsicometricoComponent implements OnInit {
   // --- OpenAI ---
   recomendacion: string = '';
   loading: boolean = false;
-
-  private openai = new OpenAI({
-    apiKey: '',
-    dangerouslyAllowBrowser: true
-  });
+  private openai: any;
 
   async obtenerRecomendacion() {
     this.loading = true;
@@ -149,13 +139,53 @@ export class PerfilPsicometricoComponent implements OnInit {
   ];
   userInput = '';
   loadingChat = false;
+  chatSesionId: number | null = null;
+  chatSesionGuardada = true;
 
-  openChat() {
-    this.showChatModal = true;
+  iniciarSesionChat(id_usuario: number) {
+    this.messages = [
+      {role: 'assistant', content: 'Hola, ¿en qué puedo ayudarte con tu perfil psicométrico?'}
+    ];
+    this.chatSesionId = null;
+    this.chatSesionGuardada = false;
+    this.sesionChatService.crearSesion({
+      id_usuario,
+      contenido: JSON.stringify(this.messages)
+    }).subscribe({
+      next: (resp: any) => {
+        this.chatSesionId = resp.id_sesion;
+        this.chatSesionGuardada = false;
+      }
+    });
+  }
+
+  guardarSesionChat() {
+    if (this.chatSesionId != null) {
+      this.sesionChatService.actualizarSesion(this.chatSesionId, JSON.stringify(this.messages)).subscribe({
+        next: () => {
+          this.chatSesionGuardada = true;
+          alert('Sesión de chat guardada.');
+        }
+      });
+    }
   }
 
   closeChat() {
+    if (!this.chatSesionGuardada && confirm('¿Deseas guardar la sesión de chat antes de salir?')) {
+      this.guardarSesionChat();
+    }
     this.showChatModal = false;
+    this.chatSesionId = null;
+    this.chatSesionGuardada = true;
+    this.messages = [
+      {role: 'assistant', content: 'Hola, ¿en qué puedo ayudarte con tu perfil psicométrico?'}
+    ];
+    this.userInput = '';
+  }
+
+  openChat(id_usuario: number) {
+    this.iniciarSesionChat(id_usuario);
+    this.showChatModal = true;
   }
 
   async sendMessage() {
@@ -170,6 +200,7 @@ export class PerfilPsicometricoComponent implements OnInit {
       this.messages.push(animatedMsg);
       this.animateBotMessage(animatedMsg, botResponse);
       this.loadingChat = false;
+      this.chatSesionGuardada = false;
     }, 1000);
   }
 
@@ -181,5 +212,4 @@ export class PerfilPsicometricoComponent implements OnInit {
       await new Promise(res => setTimeout(res, 400));
     }
   }
-
 }
