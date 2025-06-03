@@ -19,15 +19,18 @@
       </section>
 
       <!-- 2. Resumen Semanal -->
-      <section class="resumen-semanal card">
+      <section class="resumen-semanal card resumen-color-semanal">
         <h2>Resumen Semanal</h2>
-        <button [disabled]="!tieneResumenSemanal" class="btn-resumen">
-          Ver Resumen Semanal
+        <button [disabled]="!tieneResumenSemanal" class="btn-resumen resumen-btn-semanal" (click)="toggleResumen()">
+          {{ mostrarResumen ? 'Ocultar Resumen' : 'Ver Resumen Semanal' }}
         </button>
-        <button *ngIf="!tieneResumenSemanal" class="btn-generar">
-          Generar Resumen
+        <button *ngIf="!tieneResumenSemanal" class="btn-generar-daily resumen-btn-daily" (click)="generarDailyResume()">
+          Generar Daily Resume
         </button>
-        <!-- Aquí irá la funcionalidad de resumen semanal -->
+        <div *ngIf="mostrarResumen && resumenDiario" class="resumen-diario-box">
+          <h3>Resumen generado:</h3>
+          <p>{{ resumenDiario }}</p>
+        </div>
       </section>
 
       <!-- 3. Citas -->
@@ -67,5 +70,7 @@
   [show]="showChatModal"
   [messages]="messages"
   [userInput]="userInput"
-  [loading]="loading">
-</app-chatbot-modal>
+  [loading]="loading"
+  [chatSesionGuardada]="chatSesionGuardada"
+  [guardarSesionChat]="guardarSesionChat.bind(this)"
+></app-chatbot-modal>

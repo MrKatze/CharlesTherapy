@@ -370,6 +370,39 @@
   color: #345c58;
 }
 
+.btn-generar-daily {
+  display: block;
+  width: 100%;
+  font-size: 2rem;
+  padding: 1.5rem;
+  margin: 2rem 0;
+  background-color: #1976d2;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-generar-daily:disabled {
+  background: #bdbdbd;
+  cursor: not-allowed;
+}
+
+.resumen-semanal.card {
+  padding: 2rem;
+  margin: 2rem 0;
+  background: #f5f5f5;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.resumen-semanal h2 {
+  margin-bottom: 1.5rem;
+  font-size: 1.5rem;
+  color: #333;
+}
+
 .cita-info div {
   color: #345c58;
   font-size: 1.1rem;
@@ -512,4 +545,30 @@
 
 .chatbot-input button:hover {
   background-color: #47746d;
+}
+
+.resumen-color-semanal {
+  background: linear-gradient(90deg, #f7e6d0 0%, #ffe066 100%);
+  border: 2px solid #ffd700;
+  box-shadow: 0 2px 12px rgba(255, 224, 102, 0.15);
+}
+
+.resumen-btn-semanal {
+  background: linear-gradient(90deg, #ffd700 60%, #fff6b3 100%);
+  color: #345c58;
+  border: 2px solid #ffd700;
+  font-weight: bold;
+}
+
+.resumen-btn-daily {
+  background: linear-gradient(90deg, #b8d8d4 60%, #5a8f87 100%);
+  color: #fff;
+  border: 2px solid #5a8f87;
+  font-weight: bold;
+}
+
+.resumen-btn-semanal:disabled, .resumen-btn-daily:disabled {
+  background: #e0e0e0;
+  color: #aaa;
+  border: 2px solid #ccc;
 }

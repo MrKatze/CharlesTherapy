@@ -1,7 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ChatbotModalComponent } from '../chatbot-modal/chatbot-modal.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
-import { OpenAIService } from '../../../services/openai.service';
+import { OpenAIService } from '../../services/openai.service';
+import { SesionChatService } from '../../services/sesion-chat.service';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -11,7 +12,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './historial.component.html',
   styleUrls: ['./historial.component.css']
 })
-export class HistorialComponent {
+export class HistorialComponent implements OnInit {
   showChatModal = false;
   messages: {role: string, content: string, animatedContent?: string}[] = [
     {role: 'assistant', content: 'Hola, ¿en qué puedo ayudarte con tu historial?'}
@@ -35,16 +36,62 @@ export class HistorialComponent {
     { nombre: 'Elena Ruiz', inicial: 'E', foto: '' }
   ];
 
+  chatSesionId: number | null = null;
+  chatSesionGuardada = true;
+
   private openaiService = inject(OpenAIService);
   private openai = this.openaiService.getClient();
 
-  openChat() {
-    this.showChatModal = true;
+  constructor(private sesionChatService: SesionChatService) {}
+
+  ngOnInit() {
+    // Aquí puedes cargar el historial de sesiones del usuario si es necesario
   }
 
-  closeChat = () => {
+  iniciarSesionChat(id_usuario: number) {
+    this.messages = [
+      {role: 'assistant', content: 'Hola, ¿en qué puedo ayudarte con tu historial?'}
+    ];
+    this.sesionChatService.crearSesion({
+      id_usuario,
+      contenido: JSON.stringify(this.messages)
+    }).subscribe({
+      next: (resp) => {
+        this.chatSesionId = resp.id_sesion;
+        this.chatSesionGuardada = false;
+      }
+    });
+  }
+
+  guardarSesionChat() {
+    if (this.chatSesionId != null) {
+      this.sesionChatService.actualizarSesion(this.chatSesionId, JSON.stringify(this.messages)).subscribe({
+        next: () => {
+          this.chatSesionGuardada = true;
+          alert('Sesión de chat guardada.');
+        }
+      });
+    }
+  }
+
+  closeChat() {
+    if (!this.chatSesionGuardada && confirm('¿Deseas guardar la sesión de chat antes de salir?')) {
+      this.guardarSesionChat();
+    }
     this.showChatModal = false;
-  };
+    this.chatSesionId = null;
+    this.chatSesionGuardada = true;
+    this.messages = [
+      {role: 'assistant', content: 'Hola, ¿en qué puedo ayudarte con tu historial?'}
+    ];
+    this.userInput = '';
+  }
+
+  openChat() {
+    // Aquí deberías obtener el id_usuario real
+    this.iniciarSesionChat(1); // Reemplaza 1 por el id real
+    this.showChatModal = true;
+  }
 
   sendMessage = async () => {
     if (!this.userInput.trim()) return;
@@ -67,6 +114,7 @@ export class HistorialComponent {
       this.messages.push({role: 'assistant', content: 'Lo siento, hubo un error al contactar a OpenAI.'});
     } finally {
       this.loading = false;
+      this.chatSesionGuardada = false;
     }
   };
 
@@ -77,5 +125,14 @@ export class HistorialComponent {
       msg.animatedContent += (i > 0 ? ' ' : '') + words[i];
       await new Promise(res => setTimeout(res, 400));
     }
+  }
+
+  // Bloquear navegación por sidebar si hay sesión sin guardar
+  canNavigate(): boolean {
+    if (!this.chatSesionGuardada && this.showChatModal) {
+      alert('Tienes una sesión de chat sin guardar. Por favor, guárdala o descártala antes de salir.');
+      return false;
+    }
+    return true;
   }
 }

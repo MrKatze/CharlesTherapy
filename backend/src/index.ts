@@ -5,6 +5,9 @@ import citasRoutes from './routes/citasRoutes';
 import usuariosRoutes from './routes/usuariosRoutes'
 import observacionRoutes from './routes/observacionRoutes'
 import bigfiveRoutes from './routes/bigfiveRoutes';
+import sesionChatRoutes from './routes/sesionChatRoutes';
+import resumenRoutes from './routes/resumenRoutes';
+import { SesionChat } from './model/sesionChatModel';
 
 class Server {
     public app: Application;
@@ -28,6 +31,8 @@ class Server {
         this.app.use('/api/usuarios',usuariosRoutes);
         this.app.use('/api/observaciones', observacionRoutes);
         this.app.use('/api/bigfive', bigfiveRoutes);
+        this.app.use('/api/sesiones', sesionChatRoutes);
+        this.app.use('/api/resumen', resumenRoutes);
     }
     
     start(): void {

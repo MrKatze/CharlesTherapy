@@ -47,7 +47,7 @@
   </main>
 
   <!-- Botón flotante para abrir el chat -->
-  <div class="chat-fab" (click)="openChat()">
+  <div class="chat-fab" (click)="openChat(paciente.id_usuario || 0)">
     <i class="fa-solid fa-robot"></i>
   </div>
 
@@ -57,6 +57,8 @@
     [messages]="messages"
     [userInput]="userInput"
     [loading]="loadingChat"
+    [chatSesionGuardada]="chatSesionGuardada"
+    [guardarSesionChat]="guardarSesionChat.bind(this)"
     [sendMessage]="sendMessage.bind(this)"
     [closeChat]="closeChat.bind(this)">
   </app-chatbot-modal>

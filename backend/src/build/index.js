@@ -10,6 +10,8 @@ const citasRoutes_1 = __importDefault(require("./routes/citasRoutes"));
 const usuariosRoutes_1 = __importDefault(require("./routes/usuariosRoutes"));
 const observacionRoutes_1 = __importDefault(require("./routes/observacionRoutes"));
 const bigfiveRoutes_1 = __importDefault(require("./routes/bigfiveRoutes"));
+const sesionChatRoutes_1 = __importDefault(require("./routes/sesionChatRoutes"));
+const resumenRoutes_1 = __importDefault(require("./routes/resumenRoutes"));
 class Server {
     constructor() {
         this.app = (0, express_1.default)();
@@ -30,6 +32,8 @@ class Server {
         this.app.use('/api/usuarios', usuariosRoutes_1.default);
         this.app.use('/api/observaciones', observacionRoutes_1.default);
         this.app.use('/api/bigfive', bigfiveRoutes_1.default);
+        this.app.use('/api/sesiones', sesionChatRoutes_1.default);
+        this.app.use('/api/resumen', resumenRoutes_1.default);
     }
     start() {
         this.app.listen(this.app.get('port'), () => {

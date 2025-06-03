@@ -16,11 +16,13 @@ export class ChatbotModalComponent {
   @Input() messages: {role: string, content: string, animatedContent?: string}[] = [];
   @Input() userInput = '';
   @Input() loading = false;
+  @Input() chatSesionGuardada: boolean = true;
+  @Input() guardarSesionChat: () => void = () => {};
 
   private openaiService = inject(OpenAIService);
   private openai = this.openaiService.getClient();
 
-  sendMessage = async () => {
+  async sendMessage() {
     if (!this.userInput.trim()) return;
     this.loading = true;
     const userMessage = this.userInput;
@@ -42,7 +44,7 @@ export class ChatbotModalComponent {
     } finally {
       this.loading = false;
     }
-  };
+  }
 
   closeChat = () => {
     this.show = false;
