@@ -27,6 +27,16 @@
         </div>
       </div>
 
+      <div class="message user perfil-bloque" *ngIf="especialistas.length > 0">
+        <h3>Especialistas recomendados</h3>
+        <ul>
+          <li *ngFor="let especialista of especialistas">
+            <strong>{{ especialista.usuario }}</strong> - {{ especialista.especialidad }}<br />
+            <em>{{ especialista.correo }}</em>
+          </li>
+        </ul>
+      </div>
+
       <!-- Resultados Big Five -->
       <div class="message user perfil-bloque">
         <h3>Resultados Big Five</h3>

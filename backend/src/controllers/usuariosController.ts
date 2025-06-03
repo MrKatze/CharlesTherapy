@@ -93,7 +93,24 @@ class UsuariosController {
       res.status(500).json({ message: 'Error al iniciar sesión', error });
     }
   }
-}
 
+  // Obtener especialistas por especialidad
+  async getEspecialistasByEspecialidad(req: Request, res: Response): Promise<void> {
+    try {
+      const { especialidad } = req.params;
+      const [rows] = await pool.query(
+        'SELECT id_usuario, usuario, correo, especialidad FROM usuarios WHERE rol = "Especialista" AND especialidad LIKE ?',
+        [`%${especialidad}%`]
+      );
+      if ((rows as any[]).length === 0) {
+        res.status(404).json({ message: 'No se encontraron especialistas para esta especialidad' });
+      } else {
+        res.json(rows);
+      }
+    } catch (error) {
+      res.status(500).json({ message: 'Error al obtener especialistas', error });
+    }
+  }
+}
 
 export const usuariosController = new UsuariosController();

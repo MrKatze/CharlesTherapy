@@ -5,6 +5,7 @@ import OpenAI from 'openai';
 import { SidebarComponent } from "../sidebar/sidebar.component";
 import { BigFiveQuestion, BigFiveResult } from '../../../models/bigfive.model';
 import { BigFiveService } from '../../../services/bigfive.service';
+import { UsuariosService } from '../../../services/usuarios.service';
 
 
 @Component({
@@ -31,9 +32,10 @@ export class PerfilPsicometricoComponent implements OnInit {
     { key: 'responsabilidad', label: 'Responsabilidad' }
   ];
   // Resultados del Big Five
-  constructor(private bigFiveService: BigFiveService) { }
+  constructor(private bigFiveService: BigFiveService, private usuariosService: UsuariosService) { }
 
   bigFiveResult: any = null;
+  especialistas: any[] = []; // Lista de especialistas
 
   ngOnInit() {
   const usuarioStr = localStorage.getItem('usuario');
@@ -134,12 +136,26 @@ export class PerfilPsicometricoComponent implements OnInit {
       });
 
       this.recomendacion = completion.choices[0].message?.content || 'No se pudo obtener recomendación.';
+      const especialidad = this.recomendacion.toLowerCase(); // Convertir a minúsculas para buscar
+      this.obtenerEspecialistas(especialidad); // Buscar especialistas
     } catch (error) {
       this.recomendacion = 'Ocurrió un error al obtener la recomendación.';
       console.error(error);
     } finally {
       this.loading = false;
     }
+  }
+
+  obtenerEspecialistas(especialidad: string) {
+    this.usuariosService.getEspecialistasByEspecialidad(especialidad).subscribe({
+      next: (especialistas) => {
+        this.especialistas = especialistas;
+      },
+      error: (err) => {
+        console.error('Error al obtener especialistas:', err);
+        this.especialistas = [];
+      }
+    });
   }
 
   // --- Chatbot modal ---

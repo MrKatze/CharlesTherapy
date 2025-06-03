@@ -10,4 +10,5 @@ router.get('/:id', usuariosController_1.usuariosController.getUsuarioById);
 router.post('/', usuariosController_1.usuariosController.createUsuario);
 router.put('/:id', usuariosController_1.usuariosController.updateUsuario);
 router.delete('/:id', usuariosController_1.usuariosController.deleteUsuario);
+router.get('/especialistas/:especialidad', usuariosController_1.usuariosController.getEspecialistasByEspecialidad);
 exports.default = router;

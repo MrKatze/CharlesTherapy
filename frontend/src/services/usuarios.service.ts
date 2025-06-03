@@ -40,4 +40,9 @@ export class UsuariosService {
   login(email: string, password: string): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, { correo: email, password });
   }
+
+  // Obtener especialistas por especialidad
+  getEspecialistasByEspecialidad(especialidad: string) {
+    return this.http.get<any[]>(`${this.apiUrl}/usuarios/especialistas/${especialidad}`);
+  }
 }

@@ -114,5 +114,23 @@ class UsuariosController {
             }
         });
     }
+    // Obtener especialistas por especialidad
+    getEspecialistasByEspecialidad(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { especialidad } = req.params;
+                const [rows] = yield dataBase_1.default.query('SELECT id_usuario, usuario, correo, especialidad FROM usuarios WHERE rol = "Especialista" AND especialidad LIKE ?', [`%${especialidad}%`]);
+                if (rows.length === 0) {
+                    res.status(404).json({ message: 'No se encontraron especialistas para esta especialidad' });
+                }
+                else {
+                    res.json(rows);
+                }
+            }
+            catch (error) {
+                res.status(500).json({ message: 'Error al obtener especialistas', error });
+            }
+        });
+    }
 }
 exports.usuariosController = new UsuariosController();
