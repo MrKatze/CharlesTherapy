@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import OpenAI from 'openai';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ChatbotModalComponent } from '../chatbot-modal/chatbot-modal.component';
 import { Router } from '@angular/router';
 import { SesionChatService } from '../../services/sesion-chat.service';
 import { ResumenService } from '../../services/resumen.service';
+import { OpenAIService } from '../../services/openai.service';
 
 @Component({
   selector: 'app-principal',
@@ -32,13 +32,7 @@ export class PrincipalComponent implements OnInit {
   userInput = '';
   loading = false;
 
-  // Configuración de OpenAI (usa tu API key aquí)
-  openai = new OpenAI({
-    apiKey: '', // Reemplaza con tu API key
-    dangerouslyAllowBrowser: true  // Necesario para usar en frontend
-  });
-
-  showBigFiveModal = false;
+  private openai: any;
 
   // Lógica de sesión de chat
   chatSesionId: number | null = null;
@@ -51,7 +45,15 @@ export class PrincipalComponent implements OnInit {
   // Estado para mostrar/ocultar el resumen
   mostrarResumen: boolean = false;
 
-  constructor(private router: Router, private sesionChatService: SesionChatService, private resumenService: ResumenService) {
+  // Estado para mostrar el modal del test Big Five
+  showBigFiveModal: boolean = false;
+
+  constructor(
+    private router: Router,
+    private sesionChatService: SesionChatService,
+    private resumenService: ResumenService,
+    private openaiService: OpenAIService
+  ) {
     // Prevenir navegación si hay sesión de chat sin guardar
     window.addEventListener('beforeunload', (event) => {
       if (!this.chatSesionGuardada && this.showChatModal) {
@@ -62,6 +64,7 @@ export class PrincipalComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.openai = this.openaiService.getClient();
     const usuarioStr = localStorage.getItem('usuario');
 
     if (!usuarioStr) {
@@ -195,6 +198,10 @@ export class PrincipalComponent implements OnInit {
     this.router.navigate(['/bigfive']); // Corrige la ruta a la que navega el botón
   }
 
+  irACitas() {
+    this.router.navigate(['/citas']);
+  }
+
   async generarDailyResume() {
     if (!this.usuario?.id_usuario) return;
     const id_usuario = this.usuario.id_usuario;
@@ -204,17 +211,40 @@ export class PrincipalComponent implements OnInit {
     const dd = String(hoy.getDate()).padStart(2, '0');
     const fechaHoy = `${yyyy}-${mm}-${dd}`;
     this.generandoResumen = true;
-    // Usar el nuevo método que consulta sesiones por usuario y fecha directamente
     this.sesionChatService.obtenerSesionesPorUsuarioYFecha(id_usuario, fechaHoy).subscribe({
       next: async (sesiones: any[]) => {
-        const contenido = sesiones.map(s => s.contenido).join('\n');
+        // Filtrar solo los mensajes del usuario
+        let mensajesUsuario: string[] = [];
+        sesiones.forEach(s => {
+          try {
+            const mensajes = JSON.parse(s.contenido);
+            if (Array.isArray(mensajes)) {
+              mensajesUsuario.push(...mensajes.filter((m: any) => m.role === 'user').map((m: any) => m.content));
+            }
+          } catch (e) {
+            // Si no es JSON válido, ignora
+          }
+        });
+        const contenido = mensajesUsuario.join('\n');
         if (!contenido) {
-          alert('No hay sesiones de chat para resumir hoy.');
+          alert('No hay mensajes del usuario para resumir hoy.');
           this.generandoResumen = false;
           return;
         }
-        // Prompt personalizado
-        const prompt = `ELABORA UN RESUMEN DE NO MÁS DE 400 PALABRAS DE LOS SIGUIENTES MENSAJES:\n${contenido}`;
+        // Enriquecer el prompt con datos del usuario y perfil psicométrico
+        let perfil = '';
+        if (this.usuario) {
+          perfil += `Nombre completo: ${this.usuario.nombreCompleto || this.usuario.usuario || ''}. `;
+          if (this.usuario.bigFive) {
+            perfil += `Perfil psicométrico Big Five: `;
+            if (this.usuario.bigFive.abierto) perfil += `Apertura: ${this.usuario.bigFive.abierto}. `;
+            if (this.usuario.bigFive.responsable) perfil += `Responsabilidad: ${this.usuario.bigFive.responsable}. `;
+            if (this.usuario.bigFive.extraverso) perfil += `Extraversión: ${this.usuario.bigFive.extraverso}. `;
+            if (this.usuario.bigFive.amable) perfil += `Amabilidad: ${this.usuario.bigFive.amable}. `;
+            if (this.usuario.bigFive.estable) perfil += `Estabilidad emocional: ${this.usuario.bigFive.estable}. `;
+          }
+        }
+        const prompt = `Eres un asistente servicial y amigable. Elabora un resumen de no más de 400 palabras de los siguientes mensajes del usuario (ignora las respuestas del chatbot). Utiliza un tono empático y constructivo, y si es posible, ofrece sugerencias o palabras de ánimo.\n\nDatos del usuario: ${perfil}\n\nMensajes del usuario hoy:\n${contenido}`;
         let resumen = '';
         try {
           const completion = await this.openai.chat.completions.create({
@@ -222,23 +252,26 @@ export class PrincipalComponent implements OnInit {
             messages: [{ role: 'user', content: prompt }]
           });
           resumen = completion.choices[0].message?.content || '';
+          this.resumenDiario = resumen;
+          this.tieneResumenSemanal = true;
+          this.generandoResumen = false;
+          // Guardar en la tabla resumen
+          this.resumenService.crearResumen({
+            id_usuario,
+            fecha: fechaHoy,
+            contenido,
+            resumen
+          }).subscribe({
+            next: () => {},
+            error: () => {
+              alert('El resumen se generó pero no se pudo guardar en la base de datos.');
+            }
+          });
         } catch (error) {
           alert('Error al generar el resumen con IA.');
           this.generandoResumen = false;
           return;
         }
-        this.resumenService.crearResumen({ id_usuario, fecha: fechaHoy, contenido, resumen }).subscribe({
-          next: () => {
-            this.resumenDiario = resumen;
-            this.tieneResumenSemanal = true;
-            this.generandoResumen = false;
-            alert('Resumen diario guardado exitosamente.');
-          },
-          error: () => {
-            alert('Error al guardar el resumen diario.');
-            this.generandoResumen = false;
-          }
-        });
       },
       error: () => {
         alert('Error al obtener las sesiones de chat.');

@@ -18,11 +18,11 @@
         </div>
       </section>
 
-      <!-- 2. Resumen Semanal -->
+      <!-- 2. Resumen Diario -->
       <section class="resumen-semanal card resumen-color-semanal">
-        <h2>Resumen Semanal</h2>
+        <h2>Resumen Diario</h2>
         <button [disabled]="!tieneResumenSemanal" class="btn-resumen resumen-btn-semanal" (click)="toggleResumen()">
-          {{ mostrarResumen ? 'Ocultar Resumen' : 'Ver Resumen Semanal' }}
+          {{ mostrarResumen ? 'Ocultar Resumen' : 'Ver Resumen Diario' }}
         </button>
         <button *ngIf="!tieneResumenSemanal" class="btn-generar-daily resumen-btn-daily" (click)="generarDailyResume()">
           Generar Daily Resume
@@ -45,7 +45,7 @@
           </div>
         </ng-container>
         <ng-template #sinCita>
-          <button class="btn-agendar" (click)="abrirModalCita()">Agendar Cita</button>
+          <button class="btn-agendar" (click)="irACitas()">Agendar Cita</button>
         </ng-template>
         <!-- Aquí irá el modal de agendar cita -->
       </section>

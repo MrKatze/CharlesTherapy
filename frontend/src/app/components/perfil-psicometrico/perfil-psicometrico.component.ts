@@ -1,11 +1,11 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChatbotModalComponent } from '../chatbot-modal/chatbot-modal.component';
-import OpenAI from 'openai';
 import { SidebarComponent } from "../sidebar/sidebar.component";
 import { SesionChatService } from '../../services/sesion-chat.service';
 import { BigFiveService } from '../../services/bigfive.service';
 import { BigFiveResult } from '../../models/bigfive.model';
+import { OpenAIService } from '../../services/openai.service';
 
 @Component({
   selector: 'app-perfil-psicometrico',
@@ -32,7 +32,11 @@ export class PerfilPsicometricoComponent implements OnInit {
     { key: 'responsabilidad', label: 'Responsabilidad' }
   ];
   // Resultados del Big Five
-  constructor(private bigFiveService: BigFiveService, private sesionChatService: SesionChatService) { }
+  constructor(
+    private bigFiveService: BigFiveService,
+    private sesionChatService: SesionChatService,
+    private openaiService: OpenAIService
+  ) { }
 
   bigFiveResult: any = null;
 
@@ -72,6 +76,8 @@ export class PerfilPsicometricoComponent implements OnInit {
         console.error('Error al obtener resultados Big Five:', err);
       }
     });
+
+    this.openai = this.openaiService.getClient();
   }
 
 
@@ -93,11 +99,7 @@ export class PerfilPsicometricoComponent implements OnInit {
   // --- OpenAI ---
   recomendacion: string = '';
   loading: boolean = false;
-
-  private openai = new OpenAI({
-    apiKey: '',
-    dangerouslyAllowBrowser: true
-  });
+  private openai: any;
 
   async obtenerRecomendacion() {
     this.loading = true;
