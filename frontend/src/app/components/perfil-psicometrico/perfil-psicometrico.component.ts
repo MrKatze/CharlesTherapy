@@ -6,6 +6,7 @@ import { SesionChatService } from '../../services/sesion-chat.service';
 import { BigFiveService } from '../../services/bigfive.service';
 import { BigFiveResult } from '../../models/bigfive.model';
 import { OpenAIService } from '../../services/openai.service';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-perfil-psicometrico',
@@ -35,7 +36,8 @@ export class PerfilPsicometricoComponent implements OnInit {
   constructor(
     private bigFiveService: BigFiveService,
     private sesionChatService: SesionChatService,
-    private openaiService: OpenAIService
+    private openaiService: OpenAIService,
+    private http: HttpClient
   ) { }
 
   bigFiveResult: any = null;
@@ -101,6 +103,10 @@ export class PerfilPsicometricoComponent implements OnInit {
   loading: boolean = false;
   private openai: any;
 
+  // Nueva variable para el tipo de especialista recomendado
+  tipoEspecialistaRecomendado: string = '';
+  loadingTipoEspecialista: boolean = false;
+
   async obtenerRecomendacion() {
     this.loading = true;
     this.recomendacion = 'Obteniendo recomendación...';
@@ -130,6 +136,79 @@ export class PerfilPsicometricoComponent implements OnInit {
     } finally {
       this.loading = false;
     }
+  }
+
+  // Nueva función para obtener solo el tipo de especialista recomendado
+  async obtenerTipoEspecialistaRecomendado() {
+    this.loadingTipoEspecialista = true;
+    this.tipoEspecialistaRecomendado = 'Obteniendo tipo de especialista...';
+
+    // Lista de especialidades válidas
+    const especialidades = [
+      "Psicólogo clínico",
+      "Psicólogo educativo",
+      "Psicólogo organizacional o laboral",
+      "Psicólogo forense",
+      "Psicólogo de la salud",
+      "Psicólogo deportivo",
+      "Psicólogo neuropsicólogo",
+      "Psicólogo social",
+      "Psicólogo infantil o del desarrollo",
+      "Psicólogo cognitivo-conductual",
+      "Psicoterapeuta",
+      "Psicólogo comunitario",
+      "Psicólogo experimental",
+      "Psicólogo gerontológico"
+    ];
+
+    const { neuroticismo, extraversion, apertura, amabilidad, responsabilidad } = this.bigFiveResult;
+
+    const prompt = `Eres un sistema de recomendación psicométrica. 
+    El paciente tiene los siguientes puntajes Big Five: 
+    Neuroticismo: ${neuroticismo}, 
+    Extraversión: ${extraversion}, 
+    Apertura: ${apertura},
+    Amabilidad: ${amabilidad},
+    Responsabilidad: ${responsabilidad}.
+    De acuerdo a estos resultados, responde únicamente con el tipo de especialista más adecuado de la siguiente lista (sin explicación, solo el nombre exacto de la especialidad):
+    ${especialidades.map(e => `- ${e}`).join('\n')}
+    `;
+
+    try {
+      const completion = await this.openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [{ role: 'user', content: prompt }]
+      });
+
+      // Solo el nombre de la especialidad
+      this.tipoEspecialistaRecomendado = completion.choices[0].message?.content?.trim() || '';
+    } catch (error) {
+      this.tipoEspecialistaRecomendado = '';
+      console.error(error);
+    } finally {
+      this.loadingTipoEspecialista = false;
+    }
+  }
+
+  especialistas: any[] = [];
+  loadingEspecialistas: boolean = false;
+
+  obtenerEspecialistasPorEspecialidad(especialidad: string) {
+    this.loadingEspecialistas = true;
+    this.especialistas = [];
+    this.http.get<any[]>(`http://localhost:3000/api/usuarios/especialidad/${encodeURIComponent(especialidad)}`)
+      .subscribe({
+        next: (data) => {
+          this.especialistas = data;
+        },
+        error: (err) => {
+          this.especialistas = [];
+          console.error('Error al obtener especialistas:', err);
+        },
+        complete: () => {
+          this.loadingEspecialistas = false;
+        }
+      });
   }
 
   // --- Chatbot modal ---

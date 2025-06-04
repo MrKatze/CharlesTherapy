@@ -127,5 +127,18 @@ class UsuariosController {
             }
         });
     }
+    // Obtener usuarios por especialidad
+    getUsuariosByEspecialidad(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                const { especialidad } = req.params;
+                const [rows] = yield dataBase_1.default.query('SELECT * FROM usuarios WHERE especialidad = ?', [especialidad]);
+                res.json(rows);
+            }
+            catch (error) {
+                res.status(500).json({ message: 'Error al obtener usuarios por especialidad', error });
+            }
+        });
+    }
 }
 exports.usuariosController = new UsuariosController();
