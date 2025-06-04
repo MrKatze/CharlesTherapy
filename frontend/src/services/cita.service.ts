@@ -14,6 +14,7 @@ export class CitasService {
     getCitas(): Observable<CitaModel[]> {
         return this.http.get<CitaModel[]>(`${this.apiUrl}/list`);
     }
+    
     getCitaById(id: number): Observable<CitaModel> {
         return this.http.get<CitaModel>(`${this.apiUrl}/list/${id}`);
     }
@@ -37,6 +38,10 @@ export class CitasService {
     }
     getCitasByEspecialistaId(especialistaId: number): Observable<CitaModel[]> {
         return this.http.get<CitaModel[]>(`${this.apiUrl}/especialista/${especialistaId}`);
+    }
+
+    getCitasPaciente(especialistaId: number): Observable<CitaModel[]> {
+        return this.http.get<CitaModel[]>(`${this.apiUrl}/cita_paciente/${especialistaId}`);
     }
 
     formatFechaMySQL(date: Date): string {

@@ -87,6 +87,7 @@ class CitaController {
             res.status(200).json(resp);
         }
     }
+    
     public async getCitasByEspecialista(req: Request, res: Response): Promise<void> {
         const { especialista_id } = req.params;
         const [resp] = await pool.query(`SELECT 
@@ -101,6 +102,7 @@ class CitaController {
                 `, [especialista_id]);
         res.json(resp);
     }
+    
     public async getCitaDetalle(req: Request, res: Response): Promise<void> {
         const { id } = req.params;
         const [resp]: any = await pool.query(`
@@ -120,6 +122,43 @@ class CitaController {
         } else {
             res.status(404).json({ message: 'Cita no encontrada' });
         }
+    }
+
+
+    public async listEspecialistas(req: Request, res: Response): Promise<void> {
+    const [resp] = await pool.query(`
+        SELECT 
+            u.id_usuario,
+            u.usuario AS nombre,
+            u.rol
+        FROM 
+            usuarios u
+        WHERE
+            u.rol = 'especialista';
+    `);
+   
+        res.json(resp);
+    
+    
+}
+
+    public async getCitasPaciente(req: Request, res: Response): Promise<void> {
+        const { id } = req.params;
+        const [resp] = await pool.query(`
+            SELECT 
+                c.*, 
+                e.usuario AS paciente_nombre
+            FROM 
+                cita c
+            JOIN 
+                usuarios p ON c.paciente_id = p.id_usuario
+            JOIN 
+                usuarios e ON c.especialista_id = e.id_usuario
+            WHERE 
+                p.id_usuario = ?;
+        `, [id]);
+    
+        res.json(resp);
     }
 
 

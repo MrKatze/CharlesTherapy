@@ -199,7 +199,7 @@ export class PrincipalComponent implements OnInit {
   }
 
   irACitas() {
-    this.router.navigate(['/citas']);
+    this.router.navigate(['/citas/paciente/']);
   }
 
   async generarDailyResume() {

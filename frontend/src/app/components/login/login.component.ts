@@ -30,9 +30,15 @@ export class LoginComponent {
       next: (response) => {
         // Guardar usuario en localStorage para control de flujo Big Five
         if (response && response.usuario) {
+        
           localStorage.setItem('usuario', JSON.stringify(response.usuario));
         }
-        this.router.navigate(['/home']);
+    
+    if (response.usuario.rol === 'especialista' || response.usuario.rol === 'administrador') {
+      this.router.navigate(['/citas/especialista/']);
+    } else {
+      this.router.navigate(['/home']);
+    }
       },
       error: (error) => {
         this.errorMessage = error.error?.error || 'Credenciales incorrectas o error de servidor.';

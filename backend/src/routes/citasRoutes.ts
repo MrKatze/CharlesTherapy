@@ -11,7 +11,9 @@ class CitaRoutes{
             res.send('Citas API');
         });
         this.router.get('/list', citaController.list);
+        this.router.get('/list_especialista', citaController.listEspecialistas);
         this.router.get('/list/:id', citaController.listOne);
+        this.router.get('/cita_paciente/:id', citaController.getCitasPaciente);
         this.router.post('/create', citaController.create);
         this.router.put('/update/:id', citaController.update);
         this.router.delete('/delete/:id', citaController.delete);

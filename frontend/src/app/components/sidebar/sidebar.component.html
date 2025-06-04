@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<aside class="sidebar {{colorClase}}">
+<aside *ngIf="this.rol =='paciente'" class="sidebar {{colorClase}}">
   <a href="/home" class="menu-item">
     <span class="icon home"><i class="fa-solid fa-home"></i></span>
     <span class="label">Inicio</span>
@@ -9,19 +9,27 @@
     <span class="icon profile"><i class="fa-solid fa-user"></i></span>
     <span class="label">Perfil</span>
   </a>
-  <a href="/historial" class="menu-item">
-    <span class="icon clock"><i class="fa-solid fa-clock"></i></span>
-    <span class="label">Historial</span>
-  </a>
   <a href="/chatbot" class="menu-item">
     <span class="icon menu"><i class="fa-solid fa-message"></i></span>
     <span class="label">Chat</span>
   </a>
-  <a *ngIf="this.rol =='paciente'" href="/citas/paciente" class="menu-item">
+  <a  href="/citas/paciente" class="menu-item">
     <span class="icon citas"><i class="fa-solid fa-calendar"></i></span>
     <span class="label">Citas</span>
   </a>
-  <a *ngIf="this.rol =='especialista'" href="/citas/especialista" class="menu-item">
+  <a (click)="cerrarSesion()" class="menu-item">
+  <span class="icon logout"><i class="fa-solid fa-right-from-bracket"></i></span>
+  <span class="label">Cerrar sesión</span>
+</a>
+
+</aside>
+
+<aside *ngIf="rol === 'especialista' || rol === 'admin'" class="sidebar {{colorClase}}">
+  <a href="/chatbot" class="menu-item">
+    <span class="icon menu"><i class="fa-solid fa-message"></i></span>
+    <span class="label">Chat</span>
+  </a>
+  <a href="/citas/especialista" class="menu-item">
     <span class="icon citas"><i class="fa-solid fa-calendar"></i></span>
     <span class="label">Citas</span>
   </a>
