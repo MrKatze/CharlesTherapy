@@ -25,6 +25,30 @@
           <h4>Recomendación de la IA:</h4>
           <p>{{ recomendacion }}</p>
         </div>
+
+        <!-- Nuevo botón para obtener tipo de especialista recomendado -->
+        <button (click)="obtenerTipoEspecialistaRecomendado()" class="btn-recomendacion" [disabled]="loadingTipoEspecialista || !bigFiveResult">
+          {{ loadingTipoEspecialista ? 'Cargando...' : 'Especialista recomendado (tipo)' }}
+        </button>
+        <div *ngIf="tipoEspecialistaRecomendado" class="recomendacion-ia">
+          <h4>Tipo de especialista recomendado:</h4>
+          <p>{{ tipoEspecialistaRecomendado }}</p>
+          <!-- Botón para buscar especialistas -->
+          <button class="btn-recomendacion"
+                  (click)="obtenerEspecialistasPorEspecialidad(tipoEspecialistaRecomendado)"
+                  [disabled]="loadingEspecialistas">
+            {{ loadingEspecialistas ? 'Buscando...' : 'Ver especialistas disponibles' }}
+          </button>
+        </div>
+        <!-- Lista de especialistas -->
+        <div *ngIf="especialistas.length > 0" class="recomendacion-ia">
+          <h4>Especialistas disponibles:</h4>
+          <ul>
+            <li *ngFor="let esp of especialistas">
+              {{ esp.usuario }} - {{ esp.correo }}
+            </li>
+          </ul>
+        </div>
       </div>
 
       <!-- Resultados Big Five -->

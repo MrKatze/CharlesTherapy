@@ -33,7 +33,23 @@
 
     <div class="form-group" *ngIf="tipo === 'Especialista'">
       <label for="especialidad">Especialidad</label>
-      <input type="text" id="especialidad" [(ngModel)]="especialidad" name="especialidad" required />
+      <select id="especialidad" [(ngModel)]="especialidad" name="especialidad" required>
+        <option value="" disabled selected>Selecciona una especialidad</option>
+        <option value="Psicólogo clínico">Psicólogo clínico</option>
+        <option value="Psicólogo educativo">Psicólogo educativo</option>
+        <option value="Psicólogo organizacional o laboral">Psicólogo organizacional o laboral</option>
+        <option value="Psicólogo forense">Psicólogo forense</option>
+        <option value="Psicólogo de la salud">Psicólogo de la salud</option>
+        <option value="Psicólogo deportivo">Psicólogo deportivo</option>
+        <option value="Psicólogo neuropsicólogo">Psicólogo neuropsicólogo</option>
+        <option value="Psicólogo social">Psicólogo social</option>
+        <option value="Psicólogo infantil o del desarrollo">Psicólogo infantil o del desarrollo</option>
+        <option value="Psicólogo cognitivo-conductual">Psicólogo cognitivo-conductual</option>
+        <option value="Psicoterapeuta">Psicoterapeuta</option>
+        <option value="Psicólogo comunitario">Psicólogo comunitario</option>
+        <option value="Psicólogo experimental">Psicólogo experimental</option>
+        <option value="Psicólogo gerontológico">Psicólogo gerontológico</option>
+      </select>
     </div>
 
     <div class="form-group">

@@ -93,6 +93,7 @@ class UsuariosController {
       res.status(500).json({ message: 'Error al iniciar sesión', error });
     }
   }
+
   // Obtener usuarios por rol
   async getUsuariosByRol(req: Request, res: Response): Promise<void> {
     try {
@@ -103,7 +104,17 @@ class UsuariosController {
       res.status(500).json({ message: 'Error al obtener usuarios por rol', error });
     }
   }
-}
 
+  // Obtener usuarios por especialidad
+  async getUsuariosByEspecialidad(req: Request, res: Response): Promise<void> {
+    try {
+      const { especialidad } = req.params;
+      const [rows] = await pool.query('SELECT * FROM usuarios WHERE especialidad = ?', [especialidad]);
+      res.json(rows);
+    } catch (error) {
+      res.status(500).json({ message: 'Error al obtener usuarios por especialidad', error });
+    }
+  }
+}
 
 export const usuariosController = new UsuariosController();
