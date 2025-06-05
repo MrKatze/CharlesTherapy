@@ -7,7 +7,7 @@ export interface BigFiveQuestion {
 export interface BigFiveResult {
   id_usuario: number;
   neuroticismo: number;
-  extraversion: number;
+  extraversion: number; // <-- sin tilde, igual que backend
   apertura: number;
   amabilidad: number;
   responsabilidad: number;

@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ChatbotModalComponent } from '../chatbot-modal/chatbot-modal.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
-import { OpenAIService } from '../../services/openai.service';
-import { SesionChatService } from '../../services/sesion-chat.service';
+import { OpenAIService } from '../../../services/openai.service';
+import { SesionChatService } from '../../../services/sesion-chat.service';
 import { CommonModule } from '@angular/common';
 
 @Component({

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { OpenAIService } from '../../../services/openai.service';
-import { SesionChatService } from '../../services/sesion-chat.service';
+import { SesionChatService } from '../../../services/sesion-chat.service';
 
 @Component({
   selector: 'app-chatbot',

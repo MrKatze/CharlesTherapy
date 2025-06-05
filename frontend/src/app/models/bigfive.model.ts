@@ -1,7 +1,7 @@
 export interface BigFiveResult {
   id_usuario: number;
   neuroticismo: number;
-  extraversión: number;
+  extraversion: number; // <-- sin tilde, igual que backend
   apertura: number;
   amabilidad: number;
   responsabilidad: number;
@@ -9,6 +9,6 @@ export interface BigFiveResult {
 
 export interface BigFiveQuestion {
   text: string;
-  trait: 'neuroticismo' | 'extraversión' | 'apertura' | 'amabilidad' | 'responsabilidad';
+  trait: 'neuroticismo' | 'extraversion' | 'apertura' | 'amabilidad' | 'responsabilidad';
   section: number;
 }

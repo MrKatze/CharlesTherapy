@@ -2,10 +2,10 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, OnInit } from '@an
 import { CommonModule } from '@angular/common';
 import { ChatbotModalComponent } from '../chatbot-modal/chatbot-modal.component';
 import { SidebarComponent } from "../sidebar/sidebar.component";
-import { SesionChatService } from '../../services/sesion-chat.service';
-import { BigFiveService } from '../../services/bigfive.service';
+import { SesionChatService } from '../../../services/sesion-chat.service';
+import { BigFiveService } from '../../../services/bigfive.service';
 import { BigFiveResult } from '../../models/bigfive.model';
-import { OpenAIService } from '../../services/openai.service';
+import { OpenAIService } from '../../../services/openai.service';
 import { HttpClient } from '@angular/common/http';
 
 @Component({
@@ -59,7 +59,6 @@ export class PerfilPsicometricoComponent implements OnInit {
     // 🔄 Obtiene el ID del usuario
 
     const id_usuario = Number(usuario.id_usuario);
-    //console.log('ID de usuario:', id_usuario);
 
     this.bigFiveService.getResultsByUser(id_usuario).subscribe({
       next: (resultados: BigFiveResult[]) => {
@@ -67,7 +66,7 @@ export class PerfilPsicometricoComponent implements OnInit {
           const r = resultados[resultados.length - 1];
           this.bigFiveResult = {
             neuroticismo: Number(r.neuroticismo),
-            extraversion: Number(r.extraversión),
+            extraversion: Number(r.extraversion),
             apertura: Number(r.apertura),
             amabilidad: Number(r.amabilidad),
             responsabilidad: Number(r.responsabilidad)
@@ -78,7 +77,6 @@ export class PerfilPsicometricoComponent implements OnInit {
         console.error('Error al obtener resultados Big Five:', err);
       }
     });
-
     this.openai = this.openaiService.getClient();
   }
 
@@ -111,25 +109,8 @@ export class PerfilPsicometricoComponent implements OnInit {
     this.loading = true;
     this.recomendacion = 'Obteniendo recomendación...';
 
-    const { neuroticismo, extraversion, apertura, amabilidad, responsabilidad } = this.bigFiveResult;
-
-    const prompt = `Soy un sistema de apoyo psicométrico. 
-                    El paciente tiene los siguientes puntajes: 
-                    Neuroticismo: ${neuroticismo}, 
-                    Extraversion: ${extraversion}, 
-                    Apertura: ${apertura},
-                    Amabilidad: ${amabilidad},
-                    Responsabilidad: ${responsabilidad}.
-                    Basado en estos resultados, 
-                  ¿Qué tipo de especialista psicológico o de salud mental recomendarías para este perfil? Responde de forma breve y profesional.`;
-
     try {
-      const completion = await this.openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: 'user', content: prompt }]
-      });
-
-      this.recomendacion = completion.choices[0].message?.content || 'No se pudo obtener recomendación.';
+      this.recomendacion = await this.openaiService.obtenerRecomendacionEspecialista(this.bigFiveResult);
     } catch (error) {
       this.recomendacion = 'Ocurrió un error al obtener la recomendación.';
       console.error(error);
@@ -161,27 +142,8 @@ export class PerfilPsicometricoComponent implements OnInit {
       "Psicólogo gerontológico"
     ];
 
-    const { neuroticismo, extraversion, apertura, amabilidad, responsabilidad } = this.bigFiveResult;
-
-    const prompt = `Eres un sistema de recomendación psicométrica. 
-    El paciente tiene los puntajes Big Five: 
-    Neuroticismo: ${neuroticismo}, 
-    Extraversión: ${extraversion}, 
-    Apertura: ${apertura},
-    Amabilidad: ${amabilidad},
-    Responsabilidad: ${responsabilidad}.
-    De acuerdo a estos resultados, responde únicamente con el tipo de especialista más adecuado de la siguiente lista (sin explicación, solo el nombre exacto de la especialidad):
-    ${especialidades.map(e => `- ${e}`).join('\n')}
-    `;
-
     try {
-      const completion = await this.openai.chat.completions.create({
-        model: "gpt-3.5-turbo",
-        messages: [{ role: 'user', content: prompt }]
-      });
-
-      // Solo el nombre de la especialidad
-      this.tipoEspecialistaRecomendado = completion.choices[0].message?.content?.trim() || '';
+      this.tipoEspecialistaRecomendado = await this.openaiService.obtenerTipoEspecialista(this.bigFiveResult, especialidades);
     } catch (error) {
       this.tipoEspecialistaRecomendado = '';
       console.error(error);

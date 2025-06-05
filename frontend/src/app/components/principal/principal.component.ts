@@ -4,9 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { ChatbotModalComponent } from '../chatbot-modal/chatbot-modal.component';
 import { Router } from '@angular/router';
-import { SesionChatService } from '../../services/sesion-chat.service';
-import { ResumenService } from '../../services/resumen.service';
-import { OpenAIService } from '../../services/openai.service';
+import { SesionChatService } from '../../../services/sesion-chat.service';
+import { ResumenService } from '../../../services/resumen.service';
+import { OpenAIService } from '../../../services/openai.service';
 
 @Component({
   selector: 'app-principal',
