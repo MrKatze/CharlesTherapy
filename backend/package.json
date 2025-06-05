@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha -r ts-node/register 'src/test/**/*.test.ts'",
+    "test": "mocha src/test/controllers/*.js",
     "build": "tsc -w",
     "dev": "nodemon src/build/index.js"
   },

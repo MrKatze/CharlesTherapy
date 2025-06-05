@@ -164,7 +164,7 @@ export class PerfilPsicometricoComponent implements OnInit {
     const { neuroticismo, extraversion, apertura, amabilidad, responsabilidad } = this.bigFiveResult;
 
     const prompt = `Eres un sistema de recomendación psicométrica. 
-    El paciente tiene los siguientes puntajes Big Five: 
+    El paciente tiene los puntajes Big Five: 
     Neuroticismo: ${neuroticismo}, 
     Extraversión: ${extraversion}, 
     Apertura: ${apertura},

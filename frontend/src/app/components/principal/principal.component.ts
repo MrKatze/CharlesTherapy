@@ -54,24 +54,28 @@ export class PrincipalComponent implements OnInit {
     private resumenService: ResumenService,
     private openaiService: OpenAIService
   ) {
-    // Prevenir navegación si hay sesión de chat sin guardar
-    window.addEventListener('beforeunload', (event) => {
-      if (!this.chatSesionGuardada && this.showChatModal) {
-        event.preventDefault();
-        event.returnValue = '';
-      }
-    });
+    // Prevenir navegación si hay sesión de chat sin guardar SOLO en navegador
+    if (typeof window !== 'undefined') {
+      window.addEventListener('beforeunload', (event: BeforeUnloadEvent) => {
+        if (!this.chatSesionGuardada && this.showChatModal) {
+          event.preventDefault();
+          event.returnValue = '';
+        }
+      });
+    }
   }
 
   ngOnInit() {
     this.openai = this.openaiService.getClient();
-    const usuarioStr = localStorage.getItem('usuario');
-
+    // Solo acceder a localStorage si está disponible
+    let usuarioStr = '';
+    if (typeof window !== 'undefined' && window.localStorage) {
+      usuarioStr = window.localStorage.getItem('usuario') || '';
+    }
     if (!usuarioStr) {
       console.warn('No hay datos de usuario en el localStorage');
       return;
     }
-
     try {
       this.usuario = JSON.parse(usuarioStr);
       console.log('Usuario cargado:', this.usuario);
