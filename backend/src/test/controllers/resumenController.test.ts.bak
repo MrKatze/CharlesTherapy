@@ -1,0 +1,86 @@
+require('../setup.cjs');
+import { expect } from 'chai';
+import sinon, { SinonSandbox } from 'sinon';
+import { describe, it, beforeEach, afterEach } from 'mocha';
+import { Request, Response } from 'express';
+import * as controller from '../../controllers/resumenController';
+import * as resumenModel from '../../model/resumenModel';
+require('sinon-chai');
+// En lugar de:
+// import pool from '../../dataBase';
+
+// Usa:
+import pool from '../mocks/dataBaseMock';
+
+describe('Resumen Controller', () => {
+  let sandbox: sinon.SinonSandbox;
+  let req: Partial<Request>;
+  let res: Partial<Response>;
+
+  beforeEach(() => {
+    sandbox = sinon.createSandbox();
+    req = { body: {}, query: {} };
+    res = {
+      status: sinon.stub().returnsThis(),
+      json: sinon.stub(),
+    };
+  });
+
+  afterEach(() => {
+    sandbox.restore();
+  });
+
+  describe('crearResumen()', () => {
+    it('debe retornar 400 si faltan datos', async () => {
+      req.body = { id_usuario: 1, fecha: '2023-01-01' };
+      await controller.crearResumen(req as Request, res as Response);
+      
+      // Alternativa sin sinon-chai:
+      expect((res.status as sinon.SinonStub).calledWith(400)).to.be.true;
+      expect((res.json as sinon.SinonStub).calledWith({
+        message: 'Faltan datos requeridos'
+      })).to.be.true;
+    });
+
+    it('debe crear resumen correctamente', async () => {
+      const stub = sandbox.stub(resumenModel, 'crearResumen').resolves({ id_resumen: 1 });
+      req.body = {
+        id_usuario: 1,
+        fecha: '2023-01-01',
+        contenido: 'Contenido largo...',
+        resumen: 'Resumen corto'
+      };
+
+      await controller.crearResumen(req as Request, res as Response);
+      
+      // Alternativa sin sinon-chai:
+      expect((res.status as sinon.SinonStub).calledWith(201)).to.be.true;
+      expect((res.json as sinon.SinonStub).calledWith({ id_resumen: 1 })).to.be.true;
+    });
+  });
+
+  describe('obtenerResumenPorFecha()', () => {
+    it('debe retornar 400 si faltan parámetros', async () => {
+      req.query = { id_usuario: '1' };
+      await controller.obtenerResumenPorFecha(req as Request, res as Response);
+      
+      // Alternativa sin sinon-chai:
+      expect((res.status as sinon.SinonStub).calledWith(400)).to.be.true;
+      expect((res.json as sinon.SinonStub).calledWith({
+        message: 'Faltan parámetros requeridos'
+      })).to.be.true;
+    });
+
+    it('debe retornar resumen correctamente', async () => {
+      const fakeResumen = { id: 1, resumen: 'Texto resumen' };
+      sandbox.stub(resumenModel, 'obtenerResumenPorFecha').resolves(fakeResumen);
+      req.query = { id_usuario: '1', fecha: '2023-01-01' };
+
+      await controller.obtenerResumenPorFecha(req as Request, res as Response);
+      
+      // Alternativa sin sinon-chai:
+      expect((res.status as sinon.SinonStub).calledWith(200)).to.be.true;
+      expect((res.json as sinon.SinonStub).calledWith(fakeResumen)).to.be.true;
+    });
+  });
+});

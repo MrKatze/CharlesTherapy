@@ -19,15 +19,21 @@ class Server {
         this.routes();
     }
     config() {
-        this.app.use(express_1.default.json());
-        this.app.use((0, cors_1.default)());
+        // Configura el puerto del servidor
         this.app.set('port', process.env.PORT || 3000);
+        // Configura CORS para permitir peticiones externas (como desde ngrok o otras redes)
+        this.app.use((0, cors_1.default)({
+            origin: '*', // ⚠️ En producción deberías reemplazar '*' por tu dominio seguro
+            methods: ['GET', 'POST', 'PUT', 'DELETE'],
+            allowedHeaders: ['Content-Type', 'Authorization']
+        }));
+        // Middlewares adicionales
         this.app.use((0, morgan_1.default)('dev'));
-        this.app.use((0, cors_1.default)());
         this.app.use(express_1.default.json());
         this.app.use(express_1.default.urlencoded({ extended: false }));
     }
     routes() {
+        // Definición de rutas
         this.app.use('/api/citas', citasRoutes_1.default);
         this.app.use('/api/usuarios', usuariosRoutes_1.default);
         this.app.use('/api/observaciones', observacionRoutes_1.default);
@@ -37,7 +43,7 @@ class Server {
     }
     start() {
         this.app.listen(this.app.get('port'), () => {
-            console.log('Server on port', this.app.get('port'));
+            console.log('🚀 Server running on port', this.app.get('port'));
         });
     }
 }
