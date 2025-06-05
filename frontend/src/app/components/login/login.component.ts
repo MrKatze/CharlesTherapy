@@ -34,7 +34,7 @@ export class LoginComponent {
           localStorage.setItem('usuario', JSON.stringify(response.usuario));
         }
     
-    if (response.usuario.rol === 'especialista' || response.usuario.rol === 'administrador') {
+    if (response.usuario.rol === 'Especialista') {
       this.router.navigate(['/citas/especialista/']);
     } else {
       this.router.navigate(['/home']);

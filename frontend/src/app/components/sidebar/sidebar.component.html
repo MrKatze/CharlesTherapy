@@ -1,6 +1,6 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
-<aside *ngIf="this.rol =='paciente'" class="sidebar {{colorClase}}">
+<aside *ngIf="this.rol =='Paciente'" class="sidebar {{colorClase}}">
   <a href="/home" class="menu-item">
     <span class="icon home"><i class="fa-solid fa-home"></i></span>
     <span class="label">Inicio</span>
@@ -24,7 +24,7 @@
 
 </aside>
 
-<aside *ngIf="rol === 'especialista' || rol === 'admin'" class="sidebar {{colorClase}}">
+<aside *ngIf="rol === 'Especialista'" class="sidebar {{colorClase}}">
   <a href="/chatbot" class="menu-item">
     <span class="icon menu"><i class="fa-solid fa-message"></i></span>
     <span class="label">Chat</span>
